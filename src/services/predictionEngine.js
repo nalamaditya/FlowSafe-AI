@@ -548,7 +548,7 @@ export function getTimeSeriesForGraph(environmentId, locationId, currentDecimal,
 }
 
 /**
- * Runs a simple "What-If" simulation adding extra visitors
+ * Runs an advanced "What-If" simulation adding extra visitors with proactive mitigation intelligence
  */
 export function runWhatIfSimulation(environmentId, locationId, selectedTimeStr, additionalVisitors = 100) {
   const env = ENVIRONMENTS.find(e => e.id === environmentId) || ENVIRONMENTS[0];
@@ -558,7 +558,68 @@ export function runWhatIfSimulation(environmentId, locationId, selectedTimeStr, 
   const original = interpolateCrowd(location, decimalHour, 0);
   const scenario = interpolateCrowd(location, decimalHour, additionalVisitors);
 
-  const isOverload = scenario.occupancyPct >= 85;
+  const deltaOccupancy = scenario.occupancyPct - original.occupancyPct;
+  const deltaWait = scenario.waitMin - original.waitMin;
+  const isOverload = scenario.occupancyPct >= 80;
+  const isCritical = scenario.occupancyPct >= 95;
+
+  // Find lowest crowd alternative locations in the same venue
+  const altLocations = env.locations
+    .filter(l => l.id !== location.id)
+    .map(l => {
+      const altStat = interpolateCrowd(l, decimalHour);
+      return {
+        id: l.id,
+        name: l.name,
+        icon: l.icon,
+        availableCapacity: Math.max(0, l.capacity - altStat.crowd),
+        ...altStat
+      };
+    })
+    .sort((a, b) => a.occupancyPct - b.occupancyPct);
+
+  const bestAlternative = altLocations[0] || { name: 'Auxiliary Zone', occupancyPct: 30, waitMin: 2, availableCapacity: 100 };
+  const divertCount = Math.min(additionalVisitors, Math.round(additionalVisitors * 0.45));
+
+  // Compute mitigated scenario metrics
+  const mitigatedCrowd = Math.max(original.crowd, scenario.crowd - divertCount);
+  const mitigatedOccupancy = Math.round((mitigatedCrowd / location.capacity) * 100);
+  const mitigatedWait = Math.max(1, Math.round((mitigatedOccupancy / 100) * (location.baselineWaitMin || 15)));
+  const mitigatedStatus = calculateStatus(mitigatedOccupancy);
+
+  // Concrete physical actions based on venue
+  let physicalDirectives = [];
+  if (env.id === 'campus') {
+    physicalDirectives = [
+      `🔄 Divert ~${divertCount} visitors toward ${bestAlternative.name} (${bestAlternative.occupancyPct}% full, ${bestAlternative.waitMin}m wait).`,
+      `🚪 Open Emergency / Auxiliary Gate 2 and add 2 temporary queue stanchions.`,
+      `📲 Broadcast mobile timetable alert suggesting 15-minute staggered arrival.`
+    ];
+  } else if (env.id === 'stadium') {
+    physicalDirectives = [
+      `🔄 Reroute incoming spectator flow toward ${bestAlternative.name} to balance turnstile pressure.`,
+      `⚡ Deploy 4 rapid handheld scanners to clear perimeter lines within 6 minutes.`,
+      `📢 Activate concourse video boards showing 3-minute wait at ${bestAlternative.name}.`
+    ];
+  } else if (env.id === 'hospital') {
+    physicalDirectives = [
+      `🔄 Direct non-emergency arrivals to ${bestAlternative.name} overflow waiting area.`,
+      `🩺 Open 2 backup consultation counters to absorb outpatient influx.`,
+      `📋 Activate digital queue tokens on mobile to prevent physical corridor crowding.`
+    ];
+  } else if (env.id === 'cinema') {
+    physicalDirectives = [
+      `🍿 Activate Express Popcorn Counter 3 and open secondary exit double-doors.`,
+      `🎟️ Stagger auditorium door opening times by 8 minutes to prevent lobby bottleneck.`,
+      `🚪 Direct departing patrons through East stairwells directly to parking.`
+    ];
+  } else {
+    physicalDirectives = [
+      `🔄 Guide ~${divertCount} shoppers toward ${bestAlternative.name} atrium.`,
+      `⚡ Deploy floor security marshals to maintain smooth bidirectional walkway flow.`,
+      `🅿️ Update electronic parking guidance to route incoming cars to Level B3.`
+    ];
+  }
 
   return {
     environment: env,
@@ -577,9 +638,24 @@ export function runWhatIfSimulation(environmentId, locationId, selectedTimeStr, 
       wait: scenario.waitMin,
       status: scenario.status
     },
+    mitigated: {
+      crowd: mitigatedCrowd,
+      occupancy: mitigatedOccupancy,
+      wait: mitigatedWait,
+      status: mitigatedStatus,
+      timeSavedPct: scenario.waitMin > 0 ? Math.round(((scenario.waitMin - mitigatedWait) / scenario.waitMin) * 100) : 0
+    },
+    deltaOccupancy,
+    deltaWait,
     isOverload,
-    recommendation: isOverload
-      ? `⚠️ Adding +${additionalVisitors} people pushes ${location.name} into ${scenario.status.label} (${scenario.occupancyPct}%). FlowSafe suggests activating secondary service counters or diverting traffic to alternative areas.`
-      : `✓ ${location.name} has enough headroom to absorb +${additionalVisitors} people safely (${scenario.occupancyPct}% occupancy).`
+    isCritical,
+    bestAlternative,
+    divertCount,
+    physicalDirectives,
+    recommendation: isCritical
+      ? `🚨 CRITICAL BOTTLENECK: Influx of +${additionalVisitors} exceeds safe physical limits (${scenario.occupancyPct}% occupancy). Immediate active redirection of ${divertCount} people to ${bestAlternative.name} is required to prevent gridlock.`
+      : isOverload
+      ? `⚠️ ELEVATED CONGESTION: Occupancy surges to ${scenario.occupancyPct}% (+${deltaOccupancy}%). FlowSafe recommends opening secondary access points and routing ~${divertCount} people to ${bestAlternative.name}.`
+      : `✓ STABLE CAPACITY: ${location.name} has sufficient buffer to absorb +${additionalVisitors} extra people safely without creating queue bottlenecks.`
   };
 }
