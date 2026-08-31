@@ -1,14 +1,21 @@
 import React from 'react';
-import { Clock, Sparkles, Radio, ShieldCheck } from 'lucide-react';
-import { ENVIRONMENTS } from '../data/environmentsData';
+import { Clock, Sparkles, Radio, ShieldCheck, Zap, TrendingUp, Map, Sliders, Globe } from 'lucide-react';
 
 export default function Header({ 
-  selectedEnvId, 
-  onSelectEnv, 
+  activePage, 
+  onSelectPage, 
   currentTimeFormatted, 
   isLiveSimulatedTime,
   onResetToRealTime 
 }) {
+  const navItems = [
+    { id: 'live', label: '⚡ Live Crowd', subtitle: 'What is happening now?' },
+    { id: 'forecast', label: '🔮 Future Forecast', subtitle: 'What will happen & what to do' },
+    { id: 'maps', label: '🗺️ Visual Maps', subtitle: 'Campus heatmap & stadium radar' },
+    { id: 'simulator', label: '🎛️ What-If Simulator', subtitle: 'Stress test surges' },
+    { id: 'venues', label: '🌐 16 Venues', subtitle: 'High-footfall scalability' },
+  ];
+
   return (
     <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
       <div className="max-w-6xl mx-auto px-4 md:px-6 py-3 space-y-3">
@@ -56,41 +63,24 @@ export default function Header({
           </div>
         </div>
 
-        {/* Environment Selection Pills */}
+        {/* 5 Clean Navigation Pages Tabs */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs font-semibold">
-          <span className="text-slate-400 text-[11px] font-bold uppercase tracking-wider mr-1 shrink-0">
-            Environment:
-          </span>
-
-          {ENVIRONMENTS.map((env) => {
-            const isActive = selectedEnvId === env.id;
+          {navItems.map((item) => {
+            const isActive = activePage === item.id;
             return (
               <button
-                key={env.id}
-                onClick={() => onSelectEnv(env.id)}
-                className={`px-3 py-1.5 rounded-xl transition-all shrink-0 flex items-center gap-1.5 border ${
+                key={item.id}
+                onClick={() => onSelectPage(item.id)}
+                className={`px-3.5 py-2 rounded-xl transition-all shrink-0 flex items-center gap-1.5 border ${
                   isActive
                     ? 'bg-blue-600 text-white border-blue-600 shadow-sm font-bold'
                     : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
                 }`}
               >
-                <span>{env.icon}</span>
-                <span>{env.name}</span>
+                <span>{item.label}</span>
               </button>
             );
           })}
-
-          <button
-            onClick={() => onSelectEnv('expansion')}
-            className={`px-3 py-1.5 rounded-xl transition-all shrink-0 flex items-center gap-1.5 border ${
-              selectedEnvId === 'expansion'
-                ? 'bg-slate-900 text-white border-slate-900 font-bold'
-                : 'bg-white text-slate-500 border-dashed border-slate-300 hover:text-slate-800'
-            }`}
-          >
-            <span>➕</span>
-            <span>More Venues</span>
-          </button>
         </div>
       </div>
     </header>
