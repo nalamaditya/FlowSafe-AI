@@ -66,12 +66,12 @@ export default function LiveNowGrid({
           </div>
         </div>
 
-        {/* Touch-optimized Time Slider */}
+        {/* Touch-optimized 24-Hour Time Slider */}
         <div className="py-1">
           <input
             type="range"
-            min="8.0"
-            max="20.0"
+            min="0.0"
+            max="23.75"
             step="0.25"
             value={currentDecimalHour}
             onChange={(e) => onTimeChange(parseFloat(e.target.value))}
@@ -80,10 +80,11 @@ export default function LiveNowGrid({
         </div>
 
         <div className="flex justify-between text-[9px] sm:text-[10px] font-mono text-slate-400">
-          <span>8:00 AM</span>
-          <span>1:00 PM</span>
-          <span>4:30 PM</span>
-          <span>8:00 PM</span>
+          <span>12:00 AM</span>
+          <span>6:00 AM</span>
+          <span>12:00 PM</span>
+          <span>6:00 PM</span>
+          <span>11:59 PM</span>
         </div>
       </div>
 

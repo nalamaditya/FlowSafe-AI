@@ -107,9 +107,17 @@ export function interpolateCrowd(location, decimalHour, extraVisitors = 0) {
   const v2 = hourly[nextKey];
 
   let rawCrowd = v1;
-  if (t2 > t1) {
+  if (t2 > t1 && decimalHour >= t1 && decimalHour <= t2) {
     const ratio = (decimalHour - t1) / (t2 - t1);
     rawCrowd = v1 + (v2 - v1) * ratio;
+  } else if (decimalHour < t1) {
+    // Smooth night decay before opening hours
+    const nightRatio = Math.max(0.1, decimalHour / t1);
+    rawCrowd = Math.round(v1 * nightRatio);
+  } else if (decimalHour > t2) {
+    // Smooth night decay after closing hours
+    const nightRatio = Math.max(0.1, 1 - (decimalHour - t2) / (24 - t2));
+    rawCrowd = Math.round(v2 * nightRatio);
   }
 
   const baseCrowd = Math.round(rawCrowd);
