@@ -56,14 +56,9 @@ export default function FutureForecastSection({
       {/* Section Title */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">
-              QUESTION 2 & 3
-            </span>
-            <h2 className="text-lg font-extrabold text-slate-900">
-              2. Check Future Crowd & Smart Recommendations
-            </h2>
-          </div>
+          <h2 className="text-lg font-extrabold text-slate-900">
+            Check Future Crowd & Smart Recommendations
+          </h2>
           <p className="text-xs text-slate-500 mt-1">
             Historical pattern prediction model forecasting congestion and providing comprehensive multi-tier action plans.
           </p>
@@ -297,13 +292,10 @@ export default function FutureForecastSection({
               <span className="p-1.5 rounded-lg bg-blue-600 text-white">
                 <Sparkles className="w-4 h-4" />
               </span>
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-blue-700">
-                QUESTION 3: ACTION INTELLIGENCE
-              </span>
+              <h3 className="text-lg font-black text-slate-900">
+                FlowSafe Action Plan & Recommendations
+              </h3>
             </div>
-            <h3 className="text-lg font-black text-slate-900">
-              3. What Should We Do? (FlowSafe Action Plan)
-            </h3>
             <p className="text-xs text-slate-600 font-medium">
               {rec.summary}
             </p>

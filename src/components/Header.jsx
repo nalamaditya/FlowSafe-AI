@@ -9,10 +9,10 @@ export default function Header({
   onResetToRealTime 
 }) {
   const navItems = [
-    { id: 'live', label: '⚡ Live Crowd', subtitle: '1. What is happening now?' },
-    { id: 'forecast', label: '🔮 Check Future Crowd', subtitle: '2. What will happen & 3. What to do' },
-    { id: 'simulator', label: '🎛️ What-If Simulator', subtitle: 'Stress test surges' },
-    { id: 'future', label: '🚀 Future Scope', subtitle: 'High-footfall scalability' },
+    { id: 'live', label: '⚡ Live Crowd' },
+    { id: 'forecast', label: '🔮 Check Future Crowd' },
+    { id: 'simulator', label: '🎛️ What-If Simulator' },
+    { id: 'future', label: '🚀 Future Scope' },
   ];
 
   return (

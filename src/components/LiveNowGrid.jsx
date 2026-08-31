@@ -24,14 +24,9 @@ export default function LiveNowGrid({
       {/* Section Title & Live Badge */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-4 border-b border-slate-100">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">
-              QUESTION 1
-            </span>
-            <h2 className="text-lg font-extrabold text-slate-900">
-              1. What Is Happening Now?
-            </h2>
-          </div>
+          <h2 className="text-lg font-extrabold text-slate-900">
+            Live Crowd Status
+          </h2>
           <p className="text-xs text-slate-500 mt-1">
             Real-time simulated crowd status & live visit recommendations for <strong className="text-slate-800">{env.name}</strong> at <strong className="text-blue-600">{currentTimeFormatted}</strong>.
           </p>
