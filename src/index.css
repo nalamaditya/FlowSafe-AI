@@ -3,16 +3,18 @@
 @tailwind utilities;
 
 @layer base {
-  body {
+  html, body {
     @apply bg-slate-50 text-slate-900;
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
   }
 }
 
-/* Crisp clean scrollbar */
+/* Crisp clean scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: #f1f5f9;
@@ -23,6 +25,30 @@
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+/* Hide scrollbar for mobile scroll rows */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Touch-friendly range sliders */
+input[type="range"] {
+  touch-action: pan-y;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #2563eb;
+  cursor: pointer;
+  -webkit-appearance: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 @keyframes flowDash {

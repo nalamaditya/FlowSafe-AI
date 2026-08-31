@@ -95,7 +95,7 @@ export default function App() {
       />
 
       {/* Main Page Container */}
-      <main className="flex-1 max-w-6xl w-full mx-auto p-4 md:p-6 space-y-6">
+      <main className="flex-1 max-w-6xl w-full mx-auto p-3.5 sm:p-5 md:p-6 space-y-4 sm:space-y-6">
 
         {/* 1. LIVE NOW PAGE (WHAT IS HAPPENING NOW?) */}
         {activePage === 'live' && (
