@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import LiveNowPage from './pages/LiveNowPage';
 import ForecastPage from './pages/ForecastPage';
-import MapsPage from './pages/MapsPage';
 import SimulatorPage from './pages/SimulatorPage';
-import VenuesPage from './pages/VenuesPage';
+import FutureScopePage from './pages/FutureScopePage';
 import { ENVIRONMENTS } from './data/environmentsData';
 import { 
   getEnvironmentLiveNow, 
@@ -13,10 +12,10 @@ import {
 } from './services/predictionEngine';
 
 export default function App() {
-  // Active Navigation Page: 'live' | 'forecast' | 'maps' | 'simulator' | 'venues'
+  // 4 Focused Sub-pages: 'live' | 'forecast' | 'simulator' | 'future'
   const [activePage, setActivePage] = useState('live');
 
-  // Environment Selection
+  // Environment Selection (College Campus, Stadium, Hospital, Movie Theatre, Shopping Mall)
   const [selectedEnvId, setSelectedEnvId] = useState('campus');
 
   // Real-world Browser Time & Scrubber State
@@ -78,7 +77,7 @@ export default function App() {
 
   const currentTimeFormatted = decimalToTimeString(currentDecimalHour);
 
-  // Handler to jump from a Live Card straight to Forecast page
+  // Handler to jump from a Live Card straight to Forecast page with that location pre-selected
   const handleSelectLocationForForecast = (locId) => {
     setSelectedLocationId(locId);
     setActivePage('forecast');
@@ -86,7 +85,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans antialiased">
-      {/* Sleek Top Navbar with 5 Clean Sub-pages */}
+      {/* Sleek Top Navbar */}
       <Header
         activePage={activePage}
         onSelectPage={setActivePage}
@@ -112,7 +111,7 @@ export default function App() {
           />
         )}
 
-        {/* 2. FUTURE FORECAST & ACTION RECOMMENDATIONS PAGE */}
+        {/* 2. FUTURE FORECAST & SMART RECOMMENDATIONS PAGE (WHAT WILL HAPPEN & WHAT TO DO) */}
         {activePage === 'forecast' && (
           <ForecastPage
             selectedEnvId={selectedEnvId}
@@ -128,19 +127,14 @@ export default function App() {
           />
         )}
 
-        {/* 3. INTERACTIVE 2D VENUE MAPS & HEATMAPS PAGE */}
-        {activePage === 'maps' && (
-          <MapsPage />
-        )}
-
-        {/* 4. WHAT-IF SIMULATOR & STRESS TEST LABORATORY */}
+        {/* 3. WHAT-IF SIMULATOR & SCENARIO STRESS LAB */}
         {activePage === 'simulator' && (
           <SimulatorPage />
         )}
 
-        {/* 5. 16 HIGH-FOOTFALL VENUES & SCALABILITY */}
-        {activePage === 'venues' && (
-          <VenuesPage onNavigateToForecast={() => setActivePage('forecast')} />
+        {/* 4. FUTURE SCOPE & HIGH-FOOTFALL ENVIRONMENTS */}
+        {activePage === 'future' && (
+          <FutureScopePage />
         )}
 
       </main>

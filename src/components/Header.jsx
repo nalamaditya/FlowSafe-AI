@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock, Sparkles, Radio, ShieldCheck, Zap, TrendingUp, Map, Sliders, Globe } from 'lucide-react';
+import { Clock, Sparkles } from 'lucide-react';
 
 export default function Header({ 
   activePage, 
@@ -9,17 +9,16 @@ export default function Header({
   onResetToRealTime 
 }) {
   const navItems = [
-    { id: 'live', label: '⚡ Live Crowd', subtitle: 'What is happening now?' },
-    { id: 'forecast', label: '🔮 Future Forecast', subtitle: 'What will happen & what to do' },
-    { id: 'maps', label: '🗺️ Visual Maps', subtitle: 'Campus heatmap & stadium radar' },
+    { id: 'live', label: '⚡ Live Crowd', subtitle: '1. What is happening now?' },
+    { id: 'forecast', label: '🔮 Check Future Crowd', subtitle: '2. What will happen & 3. What to do' },
     { id: 'simulator', label: '🎛️ What-If Simulator', subtitle: 'Stress test surges' },
-    { id: 'venues', label: '🌐 16 Venues', subtitle: 'High-footfall scalability' },
+    { id: 'future', label: '🚀 Future Scope', subtitle: 'High-footfall scalability' },
   ];
 
   return (
     <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
       <div className="max-w-6xl mx-auto px-4 md:px-6 py-3 space-y-3">
-        {/* Top Row: Brand & Live Clock */}
+        {/* Top Row: Brand & Live Real-Time Clock */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-extrabold text-xl shadow-md shadow-blue-500/20">
@@ -63,15 +62,15 @@ export default function Header({
           </div>
         </div>
 
-        {/* 5 Clean Navigation Pages Tabs */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs font-semibold">
+        {/* 4 Clean Navigation Tabs */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs font-semibold">
           {navItems.map((item) => {
             const isActive = activePage === item.id;
             return (
               <button
                 key={item.id}
                 onClick={() => onSelectPage(item.id)}
-                className={`px-3.5 py-2 rounded-xl transition-all shrink-0 flex items-center gap-1.5 border ${
+                className={`px-4 py-2 rounded-xl transition-all shrink-0 flex items-center gap-1.5 border ${
                   isActive
                     ? 'bg-blue-600 text-white border-blue-600 shadow-sm font-bold'
                     : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
