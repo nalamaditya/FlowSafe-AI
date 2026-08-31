@@ -139,13 +139,46 @@ export function interpolateCrowd(location, decimalHour, extraVisitors = 0) {
   };
 }
 
+export const VENUE_OPERATING_HOURS = {
+  campus: {
+    name: 'College Campus',
+    open: 8.5,       // 8:30 AM
+    close: 16.0,     // 4:00 PM (College ends at 4:00 PM)
+    activeSlots: [9.0, 10.0, 10.5, 11.0, 11.5, 12.0, 14.0, 14.5, 15.0, 15.5]
+  },
+  stadium: {
+    name: 'Stadium',
+    open: 14.0,      // 2:00 PM
+    close: 20.5,     // 8:30 PM (Match/Event hours)
+    activeSlots: [14.5, 15.0, 15.5, 16.0, 16.5, 17.0, 19.5, 20.0]
+  },
+  hospital: {
+    name: 'Hospital',
+    open: 8.5,       // 8:30 AM
+    close: 16.5,     // 4:30 PM (OPD Clinics / Regular Consultations)
+    activeSlots: [8.5, 9.0, 10.0, 11.0, 11.5, 14.0, 14.5, 15.5]
+  },
+  cinema: {
+    name: 'Movie Theatre',
+    open: 11.0,      // 11:00 AM
+    close: 22.5,     // 10:30 PM (Screening hours)
+    activeSlots: [11.5, 12.5, 14.5, 16.0, 17.5, 20.0, 21.0]
+  },
+  mall: {
+    name: 'Shopping Mall',
+    open: 10.5,      // 10:30 AM
+    close: 21.5,     // 9:30 PM (Retail hours)
+    activeSlots: [11.0, 12.0, 14.0, 15.0, 16.0, 17.0, 18.5, 20.0]
+  }
+};
+
 /**
  * Calculates live crowd trend and real-time recommendation ("Can I go there now, or should I wait?")
  */
-export function calculateLiveRecommendation(location, decimalHour) {
+export function calculateLiveRecommendation(location, decimalHour, environmentId = 'campus') {
   const current = interpolateCrowd(location, decimalHour);
-  const next10m = interpolateCrowd(location, Math.min(20.0, decimalHour + 10 / 60));
-  const next20m = interpolateCrowd(location, Math.min(20.0, decimalHour + 20 / 60));
+  const next10m = interpolateCrowd(location, Math.min(23.75, decimalHour + 10 / 60));
+  const next20m = interpolateCrowd(location, Math.min(23.75, decimalHour + 20 / 60));
 
   // Determine trend
   const diff20 = next20m.crowd - current.crowd;
@@ -177,11 +210,15 @@ export function calculateLiveRecommendation(location, decimalHour) {
     };
   }
 
-  // Look ahead 15 to 120 mins to find best upcoming time
-  const forwardOffsets = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
+  const venueHours = VENUE_OPERATING_HOURS[environmentId] || { open: 8.5, close: 16.0 };
+  const maxLookahead = venueHours.close;
+
+  // Look ahead 15 to 120 mins strictly within venue operating hours
+  const forwardOffsets = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
   const upcomingSlots = forwardOffsets
     .map(offset => {
-      const h = Math.min(20.0, decimalHour + offset);
+      const h = decimalHour + offset;
+      if (h > maxLookahead || h < venueHours.open) return null;
       const stat = interpolateCrowd(location, h);
       return {
         hour: h,
@@ -190,13 +227,15 @@ export function calculateLiveRecommendation(location, decimalHour) {
         ...stat
       };
     })
+    .filter(Boolean)
     .sort((a, b) => a.occupancyPct - b.occupancyPct);
 
+  const fallbackHour = Math.min(venueHours.close, Math.max(venueHours.open, decimalHour + 0.5));
   const bestSlot = upcomingSlots[0] || {
-    hour: decimalHour + 1.0,
-    offsetMinutes: 60,
-    timeFormatted: decimalToTimeString(decimalHour + 1.0),
-    occupancyPct: 35
+    hour: fallbackHour,
+    offsetMinutes: 30,
+    timeFormatted: decimalToTimeString(fallbackHour),
+    occupancyPct: 30
   };
 
   let action = {
@@ -287,7 +326,7 @@ export function getEnvironmentLiveNow(environmentId, decimalHour) {
 
   const locationsData = env.locations.map(loc => {
     const stats = interpolateCrowd(loc, decimalHour);
-    const liveInsight = calculateLiveRecommendation(loc, decimalHour);
+    const liveInsight = calculateLiveRecommendation(loc, decimalHour, environmentId);
 
     return {
       ...loc,
@@ -340,19 +379,34 @@ export function getFutureForecast(environmentId, locationId, selectedTimeStr, da
     })
     .sort((a, b) => a.occupancyPct - b.occupancyPct);
 
-  // Find optimal time windows (hours with occupancy < 50%)
-  const testHours = [9.0, 10.5, 11.5, 12.5, 13.5, 14.5, 15.5, 16.5, 17.5, 18.5];
+  // Find optimal time windows strictly within the venue's active operating hours
+  const venueHours = VENUE_OPERATING_HOURS[env.id] || { 
+    open: 8.5, 
+    close: 16.0, 
+    activeSlots: [9.0, 10.0, 10.5, 11.0, 11.5, 14.0, 14.5, 15.0, 15.5] 
+  };
+
+  const testHours = venueHours.activeSlots;
   const optimalSlots = testHours
+    .filter(h => h >= venueHours.open && h <= venueHours.close && Math.abs(h - decimalHour) >= 0.75)
     .map(h => ({
       hour: h,
       timeFormatted: decimalToTimeString(h),
       ...interpolateCrowd(location, h)
     }))
-    .filter(slot => slot.occupancyPct < 55 && Math.abs(slot.hour - decimalHour) >= 0.75)
+    .filter(slot => slot.occupancyPct < 55)
     .sort((a, b) => a.occupancyPct - b.occupancyPct);
 
-  const primaryBestSlot = optimalSlots[0] || { timeFormatted: '2:00 PM', waitMin: 4, occupancyPct: 35 };
-  const secondaryBestSlot = optimalSlots[1] || { timeFormatted: '11:00 AM', waitMin: 3, occupancyPct: 28 };
+  const defaultSlot1 = env.id === 'campus'
+    ? { timeFormatted: '10:30 AM', waitMin: 2, occupancyPct: 18 }
+    : { timeFormatted: '2:30 PM', waitMin: 4, occupancyPct: 35 };
+
+  const defaultSlot2 = env.id === 'campus'
+    ? { timeFormatted: '2:15 PM', waitMin: 3, occupancyPct: 24 }
+    : { timeFormatted: '11:30 AM', waitMin: 3, occupancyPct: 28 };
+
+  const primaryBestSlot = optimalSlots[0] || defaultSlot1;
+  const secondaryBestSlot = optimalSlots[1] || defaultSlot2;
 
   // Calculate estimated savings if following recommendation
   const savedWaitTime = Math.max(0, stats.waitMin - primaryBestSlot.waitMin);
