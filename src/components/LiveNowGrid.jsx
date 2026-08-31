@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, Clock, AlertTriangle, ArrowRight, Sparkles, SlidersHorizontal } from 'lucide-react';
+import { Users, Clock, AlertTriangle, ArrowRight, Sparkles, SlidersHorizontal, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 
 export default function LiveNowGrid({ 
   liveData, 
@@ -33,7 +33,7 @@ export default function LiveNowGrid({
             </h2>
           </div>
           <p className="text-xs text-slate-500 mt-1">
-            Real-time simulated crowd status for <strong className="text-slate-800">{env.name}</strong> at <strong className="text-blue-600">{currentTimeFormatted}</strong>.
+            Real-time simulated crowd status & live visit recommendations for <strong className="text-slate-800">{env.name}</strong> at <strong className="text-blue-600">{currentTimeFormatted}</strong>.
           </p>
         </div>
 
@@ -93,14 +93,19 @@ export default function LiveNowGrid({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
         {liveData.locations.map((loc) => {
           const status = loc.status;
+          const trend = loc.trend || { label: 'Stable', symbol: '→', textClass: 'text-slate-600' };
+          const rec = loc.liveRecommendation || {
+            statusText: 'Good to go now',
+            statusIcon: '✅',
+            explanation: 'Low crowd and short waiting time.'
+          };
 
           return (
             <div
               key={loc.id}
-              onClick={() => onSelectLocationForForecast(loc.id)}
-              className="bg-white p-4 rounded-xl border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between space-y-3 group"
+              className="bg-white p-4 rounded-xl border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all flex flex-col justify-between space-y-3 group"
             >
-              <div>
+              <div className="space-y-2.5">
                 {/* Header with Name & Status Badge */}
                 <div className="flex items-start justify-between gap-2">
                   <div className="space-y-0.5">
@@ -110,13 +115,13 @@ export default function LiveNowGrid({
                     <p className="text-[10px] text-slate-400">{loc.description}</p>
                   </div>
 
-                  <span className={`text-[10px] px-2 py-0.5 rounded-full border shrink-0 ${status.badgeClass}`}>
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full border shrink-0 font-mono font-bold ${status.badgeClass}`}>
                     {status.dot} {status.label}
                   </span>
                 </div>
 
                 {/* Progress Bar */}
-                <div className="mt-3 space-y-1">
+                <div className="space-y-1">
                   <div className="flex justify-between text-xs font-mono">
                     <span className="text-slate-500 font-sans text-[11px]">Occupancy:</span>
                     <strong className="text-slate-900">{loc.occupancyPct}%</strong>
@@ -133,25 +138,74 @@ export default function LiveNowGrid({
                 </div>
 
                 {/* Numbers Row */}
-                <div className="mt-3 grid grid-cols-2 gap-2 text-xs font-mono pt-2 border-t border-slate-100">
+                <div className="grid grid-cols-2 gap-2 text-xs font-mono pt-1">
                   <div>
                     <span className="text-[10px] text-slate-400 block font-sans">Current Crowd:</span>
                     <strong className="text-slate-800">{loc.crowd} / {loc.capacity}</strong>
                   </div>
                   <div>
                     <span className="text-[10px] text-slate-400 block font-sans">Wait Time:</span>
-                    <strong className={loc.occupancyPct >= 80 ? 'text-red-600' : 'text-slate-800'}>
+                    <strong className={loc.occupancyPct >= 80 ? 'text-red-600 font-bold' : 'text-slate-800'}>
                       {loc.waitMin} min
                     </strong>
                   </div>
                 </div>
+
+                {/* Crowd Trend Indicator */}
+                <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
+                  <span className="text-slate-500 text-[10px] font-medium">Crowd Trend:</span>
+                  <span className={`font-bold font-mono flex items-center gap-1 ${trend.textClass}`}>
+                    <span>{trend.symbol}</span>
+                    <span>{trend.label}</span>
+                  </span>
+                </div>
+
+                {/* FLOWSAFE LIVE RECOMMENDATION BOX */}
+                <div className={`p-3 rounded-lg border text-xs space-y-1.5 transition-all ${rec.style}`}>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-mono font-bold tracking-wider uppercase text-slate-500">
+                      FLOWSAFE RECOMMENDATION
+                    </span>
+                  </div>
+
+                  {/* Status Headline */}
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-sm">{rec.statusIcon}</span>
+                    <strong className={`font-extrabold text-xs ${rec.titleColor || 'text-slate-900'}`}>
+                      {rec.statusText}
+                    </strong>
+                  </div>
+
+                  {/* Explanation */}
+                  <p className="text-[11px] leading-snug opacity-90">
+                    {rec.explanation}
+                  </p>
+
+                  {/* Best Time / Wait Guidance (if applicable) */}
+                  {rec.bestTime && (
+                    <div className="pt-1.5 border-t border-black/10 flex flex-col gap-0.5 text-[10px] font-mono font-semibold">
+                      <span className="flex items-center gap-1">
+                        <span>🕐 Best time:</span>
+                        <strong className="font-bold text-slate-900">{rec.bestTime}</strong>
+                      </span>
+                      {rec.waitMinutes && (
+                        <span className="text-slate-600">
+                          ⏳ Consider waiting ~{rec.waitMinutes} mins
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
 
-              {/* Action hint */}
-              <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-blue-600 font-semibold group-hover:underline">
-                <span>Check Future Forecast</span>
+              {/* Action hint to check detailed future forecast */}
+              <button
+                onClick={() => onSelectLocationForForecast(loc.id)}
+                className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-blue-600 font-semibold group-hover:underline w-full text-left"
+              >
+                <span>Check Detailed Forecast</span>
                 <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-              </div>
+              </button>
             </div>
           );
         })}

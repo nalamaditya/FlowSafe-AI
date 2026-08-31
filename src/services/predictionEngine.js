@@ -132,6 +132,146 @@ export function interpolateCrowd(location, decimalHour, extraVisitors = 0) {
 }
 
 /**
+ * Calculates live crowd trend and real-time recommendation ("Can I go there now, or should I wait?")
+ */
+export function calculateLiveRecommendation(location, decimalHour) {
+  const current = interpolateCrowd(location, decimalHour);
+  const next10m = interpolateCrowd(location, Math.min(20.0, decimalHour + 10 / 60));
+  const next20m = interpolateCrowd(location, Math.min(20.0, decimalHour + 20 / 60));
+
+  // Determine trend
+  const diff20 = next20m.crowd - current.crowd;
+  const diffPct = (diff20 / location.capacity) * 100;
+
+  let trend = {
+    label: 'Stable',
+    symbol: '→',
+    direction: 'stable',
+    textClass: 'text-slate-600 font-semibold',
+    badgeClass: 'bg-slate-100 text-slate-700 border-slate-200'
+  };
+
+  if (diffPct >= 3.0) {
+    trend = {
+      label: 'Increasing',
+      symbol: '↗',
+      direction: 'up',
+      textClass: 'text-red-600 font-bold',
+      badgeClass: 'bg-red-50 text-red-700 border-red-200'
+    };
+  } else if (diffPct <= -3.0) {
+    trend = {
+      label: 'Decreasing',
+      symbol: '↘',
+      direction: 'down',
+      textClass: 'text-emerald-600 font-bold',
+      badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200'
+    };
+  }
+
+  // Look ahead 15 to 120 mins to find best upcoming time
+  const forwardOffsets = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
+  const upcomingSlots = forwardOffsets
+    .map(offset => {
+      const h = Math.min(20.0, decimalHour + offset);
+      const stat = interpolateCrowd(location, h);
+      return {
+        hour: h,
+        offsetMinutes: Math.round(offset * 60),
+        timeFormatted: decimalToTimeString(h),
+        ...stat
+      };
+    })
+    .sort((a, b) => a.occupancyPct - b.occupancyPct);
+
+  const bestSlot = upcomingSlots[0] || {
+    hour: decimalHour + 1.0,
+    offsetMinutes: 60,
+    timeFormatted: decimalToTimeString(decimalHour + 1.0),
+    occupancyPct: 35
+  };
+
+  let action = {
+    statusText: 'Good to go now',
+    statusIcon: '✅',
+    style: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+    titleColor: 'text-emerald-700',
+    explanation: 'Low crowd and short waiting time.',
+    bestTime: null,
+    waitMinutes: null
+  };
+
+  // Case 1: Low crowd (< 45%)
+  if (current.occupancyPct < 45) {
+    action = {
+      statusText: 'Good to go now',
+      statusIcon: '✅',
+      style: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+      titleColor: 'text-emerald-700',
+      explanation: 'Low crowd and short waiting time.',
+      bestTime: null,
+      waitMinutes: null
+    };
+  }
+  // Case 2: Crowd is high/moderate but decreasing (>= 45% & decreasing)
+  else if (current.occupancyPct >= 45 && trend.direction === 'down') {
+    const mins = Math.min(15, Math.max(5, bestSlot.offsetMinutes || 10));
+    action = {
+      statusText: `Better in ~${mins} minutes`,
+      statusIcon: '⏳',
+      style: 'bg-amber-50 text-amber-900 border-amber-200',
+      titleColor: 'text-amber-700',
+      explanation: 'Crowd is currently decreasing. Expected crowd will be lower shortly.',
+      bestTime: bestSlot.timeFormatted,
+      waitMinutes: mins
+    };
+  }
+  // Case 3: Crowd is high and increasing (>= 65% & increasing)
+  else if (current.occupancyPct >= 65 && trend.direction === 'up') {
+    const waitMins = Math.max(15, Math.min(45, bestSlot.offsetMinutes || 20));
+    action = {
+      statusText: "Don't go now",
+      statusIcon: '🚫',
+      style: 'bg-red-50 text-red-900 border-red-200',
+      titleColor: 'text-red-600',
+      explanation: 'Crowd is expected to increase over the next 10–20 minutes.',
+      bestTime: bestSlot.timeFormatted,
+      waitMinutes: waitMins
+    };
+  }
+  // Case 3B: High crowd and stable (>= 75% & stable)
+  else if (current.occupancyPct >= 75) {
+    const waitMins = Math.max(15, Math.min(45, bestSlot.offsetMinutes || 20));
+    action = {
+      statusText: "Don't go now",
+      statusIcon: '🚫',
+      style: 'bg-red-50 text-red-900 border-red-200',
+      titleColor: 'text-red-600',
+      explanation: 'Heavy queue congestion currently active. Consider visiting later.',
+      bestTime: bestSlot.timeFormatted,
+      waitMinutes: waitMins
+    };
+  }
+  // Case 4: Moderate crowd (45% – 65% and stable/slow)
+  else {
+    action = {
+      statusText: 'Acceptable now',
+      statusIcon: '🟡',
+      style: 'bg-amber-50/70 text-amber-900 border-amber-200',
+      titleColor: 'text-amber-800',
+      explanation: 'Moderate crowd. You can go now, but waiting time may be slightly higher.',
+      bestTime: null,
+      waitMinutes: null
+    };
+  }
+
+  return {
+    trend,
+    action
+  };
+}
+
+/**
  * Gets the simulated real-time crowd status for all locations in an environment
  */
 export function getEnvironmentLiveNow(environmentId, decimalHour) {
@@ -139,9 +279,13 @@ export function getEnvironmentLiveNow(environmentId, decimalHour) {
 
   const locationsData = env.locations.map(loc => {
     const stats = interpolateCrowd(loc, decimalHour);
+    const liveInsight = calculateLiveRecommendation(loc, decimalHour);
+
     return {
       ...loc,
-      ...stats
+      ...stats,
+      trend: liveInsight.trend,
+      liveRecommendation: liveInsight.action
     };
   });
 
