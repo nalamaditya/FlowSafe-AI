@@ -4,6 +4,7 @@ import LiveNowPage from './pages/LiveNowPage';
 import ForecastPage from './pages/ForecastPage';
 import SimulatorPage from './pages/SimulatorPage';
 import FutureScopePage from './pages/FutureScopePage';
+import PitchDeckPage from './pages/PitchDeckPage';
 import { ENVIRONMENTS } from './data/environmentsData';
 import { 
   getEnvironmentLiveNow, 
@@ -135,6 +136,11 @@ export default function App() {
         {/* 4. FUTURE SCOPE & HIGH-FOOTFALL ENVIRONMENTS */}
         {activePage === 'future' && (
           <FutureScopePage />
+        )}
+
+        {/* 5. INTERACTIVE PITCH PRESENTATION DECK */}
+        {activePage === 'deck' && (
+          <PitchDeckPage onBackToLive={() => setActivePage('live')} />
         )}
 
       </main>

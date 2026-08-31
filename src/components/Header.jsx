@@ -13,6 +13,7 @@ export default function Header({
     { id: 'forecast', label: '🔮 Check Future Crowd' },
     { id: 'simulator', label: '🎛️ What-If Simulator' },
     { id: 'future', label: '🚀 Future Scope' },
+    { id: 'deck', label: '📑 Pitch Deck' },
   ];
 
   return (
@@ -63,7 +64,7 @@ export default function Header({
           </div>
         </div>
 
-        {/* 4 Clean Navigation Tabs with Smooth Mobile Touch Scroll */}
+        {/* Navigation Tabs with Smooth Mobile Touch Scroll */}
         <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-0.5 -mx-1 px-1 text-xs font-semibold">
           {navItems.map((item) => {
             const isActive = activePage === item.id;
@@ -71,9 +72,11 @@ export default function Header({
               <button
                 key={item.id}
                 onClick={() => onSelectPage(item.id)}
-                className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl transition-all shrink-0 flex items-center gap-1 border text-xs sm:text-xs ${
+                className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl transition-all shrink-0 flex items-center gap-1 border text-xs ${
                   isActive
                     ? 'bg-blue-600 text-white border-blue-600 shadow-sm font-bold'
+                    : item.id === 'deck'
+                    ? 'bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 border-blue-200 hover:border-blue-300'
                     : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
                 }`}
               >
