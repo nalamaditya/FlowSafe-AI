@@ -94,9 +94,9 @@ export function decimalToTimeString(decimal) {
  * Strict Venue Operating Hours Matrix
  * - College Campus: Opens 7:30 AM, Classes start 9:00 AM, Ends 4:00 PM, Few stay till 6:00 PM, After 6:00 PM CLOSED.
  * - Hospital: Open 24/7 (Never Closed).
- * - Stadium: 1:00 PM to 10:30 PM.
- * - Movie Theatre: 10:30 AM to 11:30 PM.
- * - Shopping Mall: 10:00 AM to 10:30 PM.
+ * - Stadium: 10:00 AM to 11:00 PM.
+ * - Movie Theatre: 10:00 AM to 11:30 PM.
+ * - Shopping Mall: 10:00 AM to 11:00 PM.
  */
 export const VENUE_OPERATING_HOURS = {
   campus: {
@@ -123,36 +123,36 @@ export const VENUE_OPERATING_HOURS = {
   },
   stadium: {
     name: 'Sports Stadium',
-    open: 13.0,       // 1:00 PM
-    close: 22.5,      // 10:30 PM
+    open: 10.0,       // 10:00 AM
+    close: 23.0,      // 11:00 PM
     coreStart: 14.0,
     coreEnd: 21.0,
-    openStr: '1:00 PM',
-    closeStr: '10:30 PM',
+    openStr: '10:00 AM',
+    closeStr: '11:00 PM',
     is24_7: false,
-    activeSlots: [14.0, 15.0, 16.0, 17.0, 19.5, 20.0, 21.0]
+    activeSlots: [11.0, 12.0, 14.0, 15.0, 16.0, 17.0, 18.0, 19.5, 20.0, 21.0]
   },
   cinema: {
     name: 'Movie Theatre',
-    open: 10.5,       // 10:30 AM
+    open: 10.0,       // 10:00 AM
     close: 23.5,      // 11:30 PM
     coreStart: 11.0,
     coreEnd: 23.0,
-    openStr: '10:30 AM',
+    openStr: '10:00 AM',
     closeStr: '11:30 PM',
     is24_7: false,
-    activeSlots: [11.5, 12.5, 14.5, 16.0, 17.5, 20.0, 21.0, 22.0]
+    activeSlots: [11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0, 19.0, 20.0, 21.0, 22.0]
   },
   mall: {
     name: 'Shopping Mall',
     open: 10.0,       // 10:00 AM
-    close: 22.5,      // 10:30 PM
+    close: 23.0,      // 11:00 PM
     coreStart: 11.0,
     coreEnd: 21.5,
     openStr: '10:00 AM',
-    closeStr: '10:30 PM',
+    closeStr: '11:00 PM',
     is24_7: false,
-    activeSlots: [11.0, 12.0, 14.0, 15.0, 16.0, 17.0, 18.5, 20.0, 21.0]
+    activeSlots: [10.5, 11.0, 12.0, 14.0, 15.0, 16.0, 17.0, 18.5, 20.0, 21.0]
   }
 };
 
@@ -642,6 +642,7 @@ export function getTimeSeriesForGraph(environmentId, locationId, currentDecimalH
       hourDecimal: h,
       time: decimalToTimeString(h),
       crowd: stats.crowd,
+      historicalCrowd: stats.crowd,
       capacity: stats.capacity,
       occupancyPct: stats.occupancyPct,
       waitMin: stats.waitMin,
