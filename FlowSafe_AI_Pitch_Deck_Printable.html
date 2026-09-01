@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlowSafe AI — Ideathon 2K26 Pitch Deck (Printable PDF / Presentation)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white !important; padding: 0 !important; }
+      .slide-page { 
+        page-break-after: always !important; 
+        break-after: page !important;
+        height: 100vh !important;
+        max-height: 100vh !important;
+        box-shadow: none !important;
+        border: none !important;
+        border-radius: 0 !important;
+        margin-bottom: 0 !important;
+        display: flex !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen p-4 sm:p-8 flex flex-col items-center">
+
+  <!-- Print to PDF Sticky Banner -->
+  <div class="no-print w-full max-w-5xl flex items-center justify-between p-4 bg-slate-800 border border-slate-700 rounded-2xl mb-8 shadow-xl">
+    <div>
+      <h2 class="text-sm font-bold text-white">FlowSafe AI — Ideathon 2K26 Official Pitch Deck</h2>
+      <p class="text-xs text-slate-400">Team Synapse³ • 10 Slides formatted for 16:9 PDF export or PowerPoint presentation</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <button onclick="window.print()" class="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-lg transition flex items-center gap-2">
+        <span>🖨️ Export / Save as PDF (Ctrl+P)</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="w-full max-w-5xl space-y-8">
+
+    <!-- SLIDE 1: Title Slide -->
+    <div class="slide-page bg-slate-900 text-white rounded-3xl p-10 md:p-14 border border-slate-800 shadow-2xl min-h-[580px] flex flex-col justify-between items-center text-center">
+      <div class="w-full flex justify-between text-xs mono text-slate-400">
+        <span class="text-blue-400 font-bold">IDEATHON 2K26 PITCH</span>
+        <span>FlowSafe AI • Synapse³</span>
+      </div>
+
+      <div class="space-y-6 max-w-2xl">
+        <div class="w-20 h-20 rounded-3xl bg-blue-600 flex items-center justify-center text-white font-black text-4xl shadow-xl shadow-blue-500/20 mx-auto">F</div>
+        <div class="space-y-2">
+          <h1 class="text-4xl sm:text-5xl font-black tracking-tight text-white">FLOWSAFE<span class="text-blue-500">.AI</span></h1>
+          <p class="text-2xl font-bold text-blue-400">“Predict. Prevent. Protect.”</p>
+          <p class="text-xs sm:text-sm text-slate-400 font-medium pt-2">Context-Aware AI Platform for Pre-Congestion Prediction & Proactive Safety</p>
+        </div>
+        <div class="p-4 rounded-2xl bg-slate-800/80 border border-slate-700 max-w-md mx-auto">
+          <div class="text-xs font-mono font-bold text-blue-400 uppercase">TEAM</div>
+          <div class="text-lg font-black text-white">Synapse³</div>
+          <div class="text-xs text-slate-400 italic">“Three Minds. One Intelligent Future.”</div>
+        </div>
+      </div>
+
+      <div class="text-xs mono text-slate-500">Slide 1 / 10</div>
+    </div>
+
+    <!-- SLIDE 2: Problem Statement -->
+    <div class="slide-page bg-white text-slate-900 rounded-3xl p-10 md:p-14 border border-slate-200 shadow-2xl min-h-[580px] flex flex-col justify-between">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <span class="text-xs font-mono font-bold uppercase text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">Problem Statement</span>
+        <span class="text-xs mono text-slate-400">FlowSafe AI • Synapse³</span>
+      </div>
+
+      <div class="space-y-6">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900">The Dilemma of Reactive Crowd Management</h2>
+          <p class="text-xs sm:text-sm text-slate-500">Why current monitoring solutions fail to prevent congestion</p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-red-50 border border-red-200 text-center text-red-950">
+          <p class="text-base sm:text-lg font-extrabold">🔴 “Most safety solutions react AFTER overcrowding has already occurred.”</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+            <div class="text-2xl">📹</div>
+            <h3 class="font-bold text-sm text-slate-900">1. Blind Reactive CCTV</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">Cameras only count people when queues are already jammed, leaving zero window for prevention.</p>
+          </div>
+          <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+            <div class="text-2xl">⏳</div>
+            <h3 class="font-bold text-sm text-slate-900">2. Massive Queue Delay</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">Students and visitors waste 20–30 minutes in canteen and gate lines with zero forward visibility.</p>
+          </div>
+          <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+            <div class="text-2xl">🚨</div>
+            <h3 class="font-bold text-sm text-slate-900">3. Sudden Surge Hazard</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">Rain, bell intervals, or door delays cause instant human surges that escalate into dangerous stampede risks.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-between text-xs mono text-slate-400 pt-3 border-t border-slate-100">
+        <span>The Problem</span>
+        <span>Slide 2 / 10</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: The Solution -->
+    <div class="slide-page bg-white text-slate-900 rounded-3xl p-10 md:p-14 border border-slate-200 shadow-2xl min-h-[580px] flex flex-col justify-between">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <span class="text-xs font-mono font-bold uppercase text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">Our Solution</span>
+        <span class="text-xs mono text-slate-400">FlowSafe AI • Synapse³</span>
+      </div>
+
+      <div class="space-y-6">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900">FlowSafe AI: Pre-Congestion Intelligence</h2>
+          <p class="text-xs sm:text-sm text-slate-500">Transforming crowd safety from reactive response to proactive prevention</p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-center shadow-md">
+          <p class="text-lg sm:text-xl font-extrabold">💡 “Don’t wait until a place becomes crowded. Know before you go.”</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="p-5 rounded-2xl border-2 border-blue-200 bg-white space-y-2">
+            <span class="text-[10px] font-mono font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">QUESTION 1</span>
+            <h4 class="font-bold text-sm text-slate-900">1. What is happening now?</h4>
+            <p class="text-xs text-slate-600">Simulated real-time synchronization, occupancy status, and lookahead slope indicators (↗ / ↘ / →).</p>
+          </div>
+          <div class="p-5 rounded-2xl border-2 border-indigo-200 bg-white space-y-2">
+            <span class="text-[10px] font-mono font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-200">QUESTION 2</span>
+            <h4 class="font-bold text-sm text-slate-900">2. What will happen at time T?</h4>
+            <p class="text-xs text-slate-600">Historical baseline footfall curves forecasting expected occupancy % and exact queue delay.</p>
+          </div>
+          <div class="p-5 rounded-2xl border-2 border-emerald-200 bg-white space-y-2">
+            <span class="text-[10px] font-mono font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">QUESTION 3</span>
+            <h4 class="font-bold text-sm text-slate-900">3. What should we do?</h4>
+            <p class="text-xs text-slate-600">4-pillar action plan: Best arrival slots, low-crowd alternative zones, visitor advice, and operator directives.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-between text-xs mono text-slate-400 pt-3 border-t border-slate-100">
+        <span>Core Innovation</span>
+        <span>Slide 3 / 10</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: Live Decision Matrix -->
+    <div class="slide-page bg-white text-slate-900 rounded-3xl p-10 md:p-14 border border-slate-200 shadow-2xl min-h-[580px] flex flex-col justify-between">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <span class="text-xs font-mono font-bold uppercase text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">Live Decision Engine</span>
+        <span class="text-xs mono text-slate-400">FlowSafe AI • Synapse³</span>
+      </div>
+
+      <div class="space-y-6">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900">“Can I Go Now, or Should I Wait?”</h2>
+          <p class="text-xs sm:text-sm text-slate-500">4-state deterministic recommendation matrix answering the visitor decision dilemma</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="p-4 rounded-2xl border border-emerald-300 bg-emerald-50/60 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="font-extrabold text-sm text-emerald-900">✅ Good to go now</span>
+              <span class="text-[10px] font-mono font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">&lt; 45% Occupancy</span>
+            </div>
+            <p class="text-xs text-emerald-800">Immediate entry throughput and short waiting time (&lt; 3 mins). Best time to visit.</p>
+          </div>
+
+          <div class="p-4 rounded-2xl border border-amber-300 bg-amber-50/60 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="font-extrabold text-sm text-amber-900">⏳ Better in ~10 mins</span>
+              <span class="text-[10px] font-mono font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">Decreasing ↘</span>
+            </div>
+            <p class="text-xs text-amber-800">Crowd is clearing out rapidly. Waiting approximately 10 minutes cuts queue delay by ~60%.</p>
+          </div>
+
+          <div class="p-4 rounded-2xl border border-red-300 bg-red-50/60 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="font-extrabold text-sm text-red-900">🚫 Don't go now</span>
+              <span class="text-[10px] font-mono font-bold text-red-700 bg-red-100 px-2 py-0.5 rounded-full">Increasing ↗ (≥65%)</span>
+            </div>
+            <p class="text-xs text-red-800">Heavy bottleneck building up. Dynamic best upcoming time slot provided to avoid queue frustration.</p>
+          </div>
+
+          <div class="p-4 rounded-2xl border border-slate-300 bg-slate-50 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="font-extrabold text-sm text-slate-900">🟡 Acceptable now</span>
+              <span class="text-[10px] font-mono font-bold text-slate-700 bg-slate-200 px-2 py-0.5 rounded-full">45%–65% Stable →</span>
+            </div>
+            <p class="text-xs text-slate-700">Steady manageable footfall. Safe to visit with standard queue processing latency.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-between text-xs mono text-slate-400 pt-3 border-t border-slate-100">
+        <span>Live Recommendation Matrix</span>
+        <span>Slide 4 / 10</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 5: 4-Pillar Action Plan -->
+    <div class="slide-page bg-white text-slate-900 rounded-3xl p-10 md:p-14 border border-slate-200 shadow-2xl min-h-[580px] flex flex-col justify-between">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <span class="text-xs font-mono font-bold uppercase text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">Action Intelligence</span>
+        <span class="text-xs mono text-slate-400">FlowSafe AI • Synapse³</span>
+      </div>
+
+      <div class="space-y-6">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900">The 4-Pillar FlowSafe Action Plan</h2>
+          <p class="text-xs sm:text-sm text-slate-500">Turning crowd predictions into actionable relief for visitors and managers</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+          <div class="p-4 rounded-2xl border border-slate-200 bg-white space-y-1.5">
+            <strong class="text-blue-600 uppercase text-xs block">1. Best-Time Windows</strong>
+            <p class="text-slate-600 leading-relaxed">Calculates primary and secondary low-tide slots strictly within venue operational hours (e.g. 10:30 AM & 2:15 PM for College).</p>
+            <span class="text-[10px] font-bold text-blue-600 font-mono">✓ Clamped to 8:30 AM - 4:00 PM</span>
+          </div>
+
+          <div class="p-4 rounded-2xl border border-slate-200 bg-white space-y-1.5">
+            <strong class="text-emerald-600 uppercase text-xs block">2. Alternative Low-Crowd Zones</strong>
+            <p class="text-slate-600 leading-relaxed">Surfaces nearby low-density areas (e.g. Library Annex or Sports Ground) with live available headroom to distribute footfall.</p>
+            <span class="text-[10px] font-bold text-emerald-600 font-mono">✓ 1-Click Interactive Navigation</span>
+          </div>
+
+          <div class="p-4 rounded-2xl border border-slate-200 bg-white space-y-1.5">
+            <strong class="text-indigo-600 uppercase text-xs block">3. Visitor Action Guide</strong>
+            <p class="text-slate-600 leading-relaxed">Actionable visitor advice: Pre-order cafeteria meals via pass, transit via secondary stairwells, and stagger interval arrivals.</p>
+            <span class="text-[10px] font-bold text-indigo-600 font-mono">✓ Saves 15–20 mins per person</span>
+          </div>
+
+          <div class="p-4 rounded-2xl border border-slate-200 bg-white space-y-1.5">
+            <strong class="text-amber-600 uppercase text-xs block">4. Management Directives</strong>
+            <p class="text-slate-600 leading-relaxed">Concrete operational directives: Open auxiliary counters, broadcast digital signage alerts, and station crowd marshals.</p>
+            <span class="text-[10px] font-bold text-amber-600 font-mono">✓ Eliminates Stampede Risks</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-between text-xs mono text-slate-400 pt-3 border-t border-slate-100">
+        <span>Action Suite</span>
+        <span>Slide 5 / 10</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 6: What-If Simulator -->
+    <div class="slide-page bg-white text-slate-900 rounded-3xl p-10 md:p-14 border border-slate-200 shadow-2xl min-h-[580px] flex flex-col justify-between">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <span class="text-xs font-mono font-bold uppercase text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">Resilience Testing</span>
+        <span class="text-xs mono text-slate-400">FlowSafe AI • Synapse³</span>
+      </div>
+
+      <div class="space-y-6">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900">“What-If?” Scenario Stress Laboratory</h2>
+          <p class="text-xs sm:text-sm text-slate-500">Simulating unpredicted crowd spikes and proving proactive AI mitigation</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+            <span class="text-xs font-bold text-slate-500 block uppercase">1. Baseline</span>
+            <span class="text-xl font-black text-slate-900 mono">140 / 300</span>
+            <span class="text-xs text-emerald-600 font-bold block">4 min wait (Stable)</span>
+          </div>
+          <div class="p-4 rounded-2xl bg-red-50 border border-red-200">
+            <span class="text-xs font-bold text-red-700 block uppercase">2. Surge (+125)</span>
+            <span class="text-xl font-black text-red-700 mono">265 / 300</span>
+            <span class="text-xs text-red-600 font-bold block">24 min delay (CRITICAL)</span>
+          </div>
+          <div class="p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-400">
+            <span class="text-xs font-bold text-emerald-800 block uppercase">3. With AI Balancing</span>
+            <span class="text-xl font-black text-emerald-800 mono">185 / 300</span>
+            <span class="text-xs text-emerald-700 font-bold block">6 min wait (-75%)</span>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-purple-50 border border-purple-200 text-xs text-purple-950 space-y-1">
+          <span class="font-bold uppercase tracking-wider text-purple-700 font-mono">⚡ PROACTIVE MITIGATION FORMULA</span>
+          <p class="leading-relaxed">FlowSafe automatically detects lowest-density alternative zones and calculates exact diversion quotas (e.g. 45% offload) to neutralize bottlenecks before they form.</p>
+        </div>
+      </div>
+
+      <div class="flex justify-between text-xs mono text-slate-400 pt-3 border-t border-slate-100">
+        <span>Stress Testing & Mitigation</span>
+        <span>Slide 6 / 10</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 7: Privacy & Tech -->
+    <div class="slide-page bg-white text-slate-900 rounded-3xl p-10 md:p-14 border border-slate-200 shadow-2xl min-h-[580px] flex flex-col justify-between">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <span class="text-xs font-mono font-bold uppercase text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">Technology & Privacy</span>
+        <span class="text-xs mono text-slate-400">FlowSafe AI • Synapse³</span>
+      </div>
+
+      <div class="space-y-6">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900">Hardware-Agnostic & Privacy-First Architecture</h2>
+          <p class="text-xs sm:text-sm text-slate-500">Zero facial recognition. Zero biometric tracking. 100% compliant.</p>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center text-xs">
+          <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50 space-y-1">
+            <div class="text-2xl">📹</div>
+            <h4 class="font-bold text-slate-900">CCTV Optical AI</h4>
+            <p class="text-[10px] text-slate-500">Anonymous bounding box counts in RAM.</p>
+          </div>
+          <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50 space-y-1">
+            <div class="text-2xl">📶</div>
+            <h4 class="font-bold text-slate-900">WiFi Probes</h4>
+            <p class="text-[10px] text-slate-500">Macro corridor density without device tracking.</p>
+          </div>
+          <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50 space-y-1">
+            <div class="text-2xl">🎟️</div>
+            <h4 class="font-bold text-slate-900">Turnstile APIs</h4>
+            <p class="text-[10px] text-slate-500">Live gate entry/exit throughput calibration.</p>
+          </div>
+          <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50 space-y-1">
+            <div class="text-2xl">📱</div>
+            <h4 class="font-bold text-slate-900">Context Signals</h4>
+            <p class="text-[10px] text-slate-500">Voluntary timetable & schedule sync feeds.</p>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-blue-50 border border-blue-200 text-xs text-blue-900 font-medium">
+          🔒 <strong>Edge Computing Design:</strong> Video frames are processed strictly in volatile edge RAM and discarded immediately. No faces or personal identities are ever recorded or stored.
+        </div>
+      </div>
+
+      <div class="flex justify-between text-xs mono text-slate-400 pt-3 border-t border-slate-100">
+        <span>Architecture & Privacy</span>
+        <span>Slide 7 / 10</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 8: Market Scope -->
+    <div class="slide-page bg-white text-slate-900 rounded-3xl p-10 md:p-14 border border-slate-200 shadow-2xl min-h-[580px] flex flex-col justify-between">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <span class="text-xs font-mono font-bold uppercase text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">Market Scope</span>
+        <span class="text-xs mono text-slate-400">FlowSafe AI • Synapse³</span>
+      </div>
+
+      <div class="space-y-6">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900">Scalability Across 16 High-Footfall Ecosystems</h2>
+          <p class="text-xs sm:text-sm text-slate-500">One core prediction engine adapting to any human density topology</p>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+          <div class="p-3.5 rounded-2xl border border-slate-200 bg-white">🏫 Colleges & Campuses</div>
+          <div class="p-3.5 rounded-2xl border border-slate-200 bg-white">🏟️ Stadiums & Arenas</div>
+          <div class="p-3.5 rounded-2xl border border-slate-200 bg-white">🏥 Hospitals & Clinics</div>
+          <div class="p-3.5 rounded-2xl border border-slate-200 bg-white">🎬 Theatres & Cinemas</div>
+          <div class="p-3.5 rounded-2xl border border-slate-200 bg-white">🛍️ Malls & Retail</div>
+          <div class="p-3.5 rounded-2xl border border-slate-200 bg-white">✈️ Airports & Terminals</div>
+          <div class="p-3.5 rounded-2xl border border-slate-200 bg-white">🚇 Metro & Railways</div>
+          <div class="p-3.5 rounded-2xl border border-slate-200 bg-white">🎪 Festivals & Temples</div>
+        </div>
+      </div>
+
+      <div class="flex justify-between text-xs mono text-slate-400 pt-3 border-t border-slate-100">
+        <span>Scalability</span>
+        <span>Slide 8 / 10</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 9: Impact -->
+    <div class="slide-page bg-white text-slate-900 rounded-3xl p-10 md:p-14 border border-slate-200 shadow-2xl min-h-[580px] flex flex-col justify-between">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <span class="text-xs font-mono font-bold uppercase text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">Measurable Impact</span>
+        <span class="text-xs mono text-slate-400">FlowSafe AI • Synapse³</span>
+      </div>
+
+      <div class="space-y-6">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900">Quantified Value & Return on Investment</h2>
+          <p class="text-xs sm:text-sm text-slate-500">Real-world impact metrics proving the efficiency of FlowSafe AI</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+          <div class="p-6 rounded-2xl bg-emerald-50 border border-emerald-200 space-y-1">
+            <span class="text-4xl font-black text-emerald-700 mono">-75%</span>
+            <h4 class="text-xs font-bold text-slate-900 uppercase">Wait Time Cut</h4>
+            <p class="text-xs text-slate-600">Smoother throughput and zero queue frustration.</p>
+          </div>
+          <div class="p-6 rounded-2xl bg-blue-50 border border-blue-200 space-y-1">
+            <span class="text-4xl font-black text-blue-700 mono">100%</span>
+            <h4 class="text-xs font-bold text-slate-900 uppercase">Early Warning</h4>
+            <p class="text-xs text-slate-600">15–30 min advance window before crowds form.</p>
+          </div>
+          <div class="p-6 rounded-2xl bg-purple-50 border border-purple-200 space-y-1">
+            <span class="text-4xl font-black text-purple-700 mono">Zero</span>
+            <h4 class="text-xs font-bold text-slate-900 uppercase">Hardware Capex</h4>
+            <p class="text-xs text-slate-600">Integrates directly with legacy IP infrastructure.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-between text-xs mono text-slate-400 pt-3 border-t border-slate-100">
+        <span>Impact & ROI</span>
+        <span>Slide 9 / 10</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 10: Conclusion -->
+    <div class="slide-page bg-slate-900 text-white rounded-3xl p-10 md:p-14 border border-slate-800 shadow-2xl min-h-[580px] flex flex-col justify-between items-center text-center">
+      <div class="w-full flex justify-between text-xs mono text-slate-400">
+        <span class="text-blue-400 font-bold">CONCLUSION</span>
+        <span>FlowSafe AI • Synapse³</span>
+      </div>
+
+      <div class="space-y-6 max-w-xl">
+        <div class="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center text-white font-black text-3xl shadow-lg mx-auto">F</div>
+        <div class="space-y-2">
+          <h2 class="text-3xl sm:text-4xl font-black text-white">FlowSafe AI</h2>
+          <p class="text-lg font-bold text-blue-400">“Predict. Prevent. Protect.”</p>
+          <p class="text-xs sm:text-sm text-slate-400 font-medium">Transforming how millions navigate crowded environments safely, smartly, and smoothly.</p>
+        </div>
+        <div class="flex items-center justify-center gap-3 pt-2">
+          <span class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 mono text-xs font-bold border border-slate-700">Team: Synapse³</span>
+          <span class="px-4 py-2 rounded-xl bg-blue-500/20 text-blue-300 mono text-xs font-bold border border-blue-400/30">Ideathon 2K26 Finalist</span>
+        </div>
+      </div>
+
+      <div class="text-xs mono text-slate-500">Slide 10 / 10 • Thank You!</div>
+    </div>
+
+  </div>
+
+</body>
+</html>

@@ -32,10 +32,6 @@ export default function ForecastPage({
               </p>
             </div>
           </div>
-
-          <span className="text-[10px] sm:text-xs font-bold px-2.5 sm:px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 font-mono self-start sm:self-auto shrink-0">
-            Historical ML Model
-          </span>
         </div>
 
         {/* Environment Filter Buttons with Touch Scroll */}
