@@ -36,15 +36,15 @@ export default function FutureScopePage() {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
-      {/* Top Banner */}
-      <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-2">
+      {/* Top Banner with Frosted Glassmorphic Depth */}
+      <div className="bg-white/85 backdrop-blur-xl rounded-3xl border border-white/80 shadow-[0_10px_30px_rgb(0,0,0,0.04)] p-6 space-y-2">
         <div className="flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center text-slate-950 text-2xl font-black shadow-md shrink-0">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center text-slate-950 text-2xl font-black shadow-lg shadow-amber-500/25 shrink-0 border border-amber-400/30">
             🚀
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200 font-mono">
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-50/90 text-amber-700 border border-amber-200/90 font-mono shadow-xs">
                 System Scalability & Roadmap
               </span>
             </div>
@@ -58,10 +58,10 @@ export default function FutureScopePage() {
         </div>
       </div>
 
-      {/* Beta01 Architecture Header Banner */}
-      <div className="bg-slate-900 text-white p-8 rounded-3xl border border-slate-800 shadow-xl relative overflow-hidden text-center">
+      {/* Beta01 Architecture Header Banner with Glassmorphic Depth */}
+      <div className="bg-slate-900/95 backdrop-blur-xl text-white p-8 rounded-3xl border border-slate-800 shadow-2xl relative overflow-hidden text-center">
         <div className="max-w-2xl mx-auto space-y-3">
-          <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40 font-mono">
+          <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40 font-mono shadow-xs">
             CORE SYSTEM PHILOSOPHY
           </span>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
@@ -73,32 +73,32 @@ export default function FutureScopePage() {
         </div>
       </div>
 
-      {/* Beta01 Process Step Flow Bar */}
-      <div className="p-6 bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 rounded-3xl border border-slate-800 text-white flex flex-wrap items-center justify-between gap-3 font-mono text-xs">
+      {/* Beta01 Process Step Flow Bar with Frosted Glow */}
+      <div className="p-6 bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 rounded-3xl border border-slate-800 text-white flex flex-wrap items-center justify-between gap-3 font-mono text-xs shadow-xl">
         <div className="flex items-center gap-2">
-          <span className="p-2 bg-amber-500/20 text-amber-400 rounded-lg font-bold">1. SENSOR PULSE</span>
+          <span className="p-2 bg-amber-500/20 text-amber-400 rounded-lg font-bold shadow-xs">1. SENSOR PULSE</span>
           <span className="text-slate-500">➔</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="p-2 bg-purple-500/20 text-purple-400 rounded-lg font-bold">2. LIVE CROWD DETECT</span>
+          <span className="p-2 bg-purple-500/20 text-purple-400 rounded-lg font-bold shadow-xs">2. LIVE CROWD DETECT</span>
           <span className="text-slate-500">➔</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="p-2 bg-blue-500/20 text-blue-400 rounded-lg font-bold">3. HISTORICAL PATTERN</span>
+          <span className="p-2 bg-blue-500/20 text-blue-400 rounded-lg font-bold shadow-xs">3. HISTORICAL PATTERN</span>
           <span className="text-slate-500">➔</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="p-2 bg-rose-500/20 text-rose-400 rounded-lg font-bold">4. AI CONGESTION FORECAST</span>
+          <span className="p-2 bg-rose-500/20 text-rose-400 rounded-lg font-bold shadow-xs">4. AI CONGESTION FORECAST</span>
           <span className="text-slate-500">➔</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="p-2 bg-emerald-500/20 text-emerald-400 rounded-lg font-bold">5. PREVENT BOTTLENECK</span>
+          <span className="p-2 bg-emerald-500/20 text-emerald-400 rounded-lg font-bold shadow-xs">5. PREVENT BOTTLENECK</span>
         </div>
       </div>
 
       {/* Target High-Footfall Ecosystems */}
-      <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+      <div className="bg-white/85 backdrop-blur-xl rounded-3xl border border-white/80 shadow-[0_10px_30px_rgb(0,0,0,0.04)] p-6 space-y-4">
+        <div className="flex items-center justify-between pb-3 border-b border-slate-100/80">
           <div>
             <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono">
               Expansion Venues & Domain Adaptations
@@ -107,7 +107,7 @@ export default function FutureScopePage() {
               Each environment plugs in its physical capacity thresholds and peak footfall cycles.
             </p>
           </div>
-          <span className="text-[11px] font-mono text-blue-600 font-bold bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+          <span className="text-[11px] font-mono text-blue-600 font-bold bg-blue-50/90 px-3 py-1 rounded-full border border-blue-200 shadow-2xs">
             Plug & Play
           </span>
         </div>
@@ -116,7 +116,7 @@ export default function FutureScopePage() {
           {FUTURE_EXPANSION_VENUES.map((venue, idx) => (
             <div
               key={idx}
-              className="p-5 rounded-3xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-slate-300 hover:shadow-md transition-all space-y-2 group"
+              className="p-5 rounded-3xl border border-white/80 bg-slate-50/60 hover:bg-white hover:border-slate-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 space-y-2 group shadow-2xs"
             >
               <div className="text-3xl group-hover:scale-110 transition-transform">{venue.icon}</div>
               <h4 className="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{venue.name}</h4>
@@ -128,8 +128,8 @@ export default function FutureScopePage() {
         </div>
       </div>
 
-      {/* Hardware-Agnostic Sensor Ingestion Pipeline (Beta01 Step Cards Style) */}
-      <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-5">
+      {/* Hardware-Agnostic Sensor Ingestion Pipeline */}
+      <div className="bg-white/85 backdrop-blur-xl rounded-3xl border border-white/80 shadow-[0_10px_30px_rgb(0,0,0,0.04)] p-6 space-y-5">
         <div className="flex items-center gap-2 text-slate-900 font-bold text-xs uppercase tracking-wider font-mono">
           <Workflow className="w-4 h-4 text-blue-600 shrink-0" />
           <span>Hardware-Agnostic Integration Pipeline</span>
@@ -137,7 +137,7 @@ export default function FutureScopePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {dataSources.map((ds, idx) => (
-            <div key={idx} className="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-3">
+            <div key={idx} className="bg-white/90 backdrop-blur-md rounded-3xl p-5 border border-white/80 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between space-y-3">
               <div className="space-y-2.5">
                 <div className="flex items-center justify-between">
                   <div className={`w-12 h-12 rounded-2xl bg-gradient-to-tr ${ds.color} flex items-center justify-center text-white text-xl shadow-md`}>
@@ -162,7 +162,7 @@ export default function FutureScopePage() {
           ))}
         </div>
 
-        <div className="p-4 rounded-2xl bg-blue-50/70 border border-blue-200 flex items-center justify-between text-xs text-blue-900 font-medium">
+        <div className="p-4 rounded-2xl bg-blue-50/80 backdrop-blur-sm border border-blue-200 flex items-center justify-between text-xs text-blue-900 font-medium shadow-xs">
           <span>🔒 100% Privacy Compliant: Zero facial recognition, zero PII storage, edge-processed anonymized counts.</span>
         </div>
       </div>

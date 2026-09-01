@@ -18,16 +18,16 @@ export default function ForecastPage({
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
-      {/* Top Banner with Environment Switcher */}
-      <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-4">
+      {/* Top Banner with Frosted Glassmorphic Depth */}
+      <div className="bg-white/85 backdrop-blur-xl rounded-3xl border border-white/80 shadow-[0_10px_30px_rgb(0,0,0,0.04)] p-6 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-white text-2xl shadow-md shrink-0">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-white text-2xl shadow-lg shadow-purple-500/20 shrink-0 border border-purple-400/20">
               {activeEnv.icon}
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-purple-50 text-purple-700 border border-purple-200 font-mono">
+                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-purple-50/90 text-purple-700 border border-purple-200 font-mono shadow-xs">
                   Predictive AI Engine
                 </span>
               </div>
@@ -41,8 +41,8 @@ export default function ForecastPage({
           </div>
         </div>
 
-        {/* Environment Filter Buttons with Beta01 Pill Styling */}
-        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pt-3 border-t border-slate-100 text-xs font-semibold -mx-1 px-1">
+        {/* Environment Filter Buttons with Frosted Depth */}
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pt-3 border-t border-slate-100/80 text-xs font-semibold -mx-1 px-1">
           <span className="text-slate-400 text-[11px] font-bold uppercase tracking-wider mr-1 shrink-0 font-mono">
             VENUE:
           </span>
@@ -53,10 +53,10 @@ export default function ForecastPage({
               <button
                 key={env.id}
                 onClick={() => onSelectEnv(env.id)}
-                className={`px-4 py-2 rounded-xl transition-all shrink-0 flex items-center gap-2 border text-xs font-bold cursor-pointer ${
+                className={`px-4 py-2 rounded-xl transition-all duration-200 shrink-0 flex items-center gap-2 border text-xs font-bold cursor-pointer ${
                   isActive
-                    ? 'bg-slate-900 text-white border-slate-900 shadow-md'
-                    : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                    ? 'bg-slate-900 text-white border-slate-900 shadow-lg shadow-slate-900/20 scale-[1.02]'
+                    : 'bg-white/80 hover:bg-white text-slate-700 border-slate-200/80 hover:border-slate-300 shadow-xs backdrop-blur-sm'
                 }`}
               >
                 <span>{env.icon}</span>

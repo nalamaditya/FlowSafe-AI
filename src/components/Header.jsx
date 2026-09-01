@@ -16,13 +16,13 @@ export default function Header({
   ];
 
   return (
-    <header className="sticky top-0 z-30 bg-slate-900 text-white border-b border-slate-800 shadow-md">
+    <header className="sticky top-0 z-30 bg-slate-900/90 backdrop-blur-xl border-b border-slate-800/80 shadow-lg shadow-black/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 space-y-3">
         {/* Top Row: Brand & Live Real-Time Clock */}
         <div className="flex items-center justify-between gap-3">
           {/* Brand Logo & Name */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center text-slate-950 font-black text-lg shadow-md shadow-amber-500/20 shrink-0">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center text-slate-950 font-black text-lg shadow-lg shadow-amber-500/25 shrink-0 border border-amber-400/30">
               F
             </div>
             <div>
@@ -30,7 +30,7 @@ export default function Header({
                 <h1 className="text-base sm:text-lg font-black tracking-tight text-white leading-tight">
                   FLOWSAFE<span className="text-amber-400">.AI</span>
                 </h1>
-                <span className="text-[10px] sm:text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/40 uppercase tracking-wider shrink-0 font-mono">
+                <span className="text-[10px] sm:text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/40 uppercase tracking-wider shrink-0 font-mono shadow-xs">
                   Ideathon 2K26
                 </span>
               </div>
@@ -41,7 +41,7 @@ export default function Header({
           </div>
 
           {/* Real-time Clock Badge */}
-          <div className="flex items-center gap-2 bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-xl text-xs shrink-0 shadow-inner">
+          <div className="flex items-center gap-2 bg-slate-950/80 backdrop-blur-md border border-slate-800/90 px-3 py-1.5 rounded-xl text-xs shrink-0 shadow-inner">
             <div className="flex items-center gap-1.5">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -54,7 +54,7 @@ export default function Header({
             {isLiveSimulatedTime && (
               <button
                 onClick={onResetToRealTime}
-                className="text-[10px] text-amber-300 hover:text-amber-200 underline font-medium pl-2 border-l border-slate-800"
+                className="text-[10px] text-amber-300 hover:text-amber-200 underline font-medium pl-2 border-l border-slate-800 cursor-pointer"
                 title="Reset to your exact browser clock"
               >
                 Reset
@@ -63,7 +63,7 @@ export default function Header({
           </div>
         </div>
 
-        {/* 4 Clean Navigation Tabs with Beta01 Pill Style */}
+        {/* 4 Clean Navigation Tabs with Frosted Depth */}
         <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5 -mx-1 px-1 text-xs font-semibold">
           {navItems.map((item) => {
             const isActive = activePage === item.id;
@@ -71,10 +71,10 @@ export default function Header({
               <button
                 key={item.id}
                 onClick={() => onSelectPage(item.id)}
-                className={`px-4 py-2 rounded-xl transition-all shrink-0 flex items-center gap-1.5 border text-xs font-bold cursor-pointer ${
+                className={`px-4 py-2 rounded-xl transition-all duration-200 shrink-0 flex items-center gap-1.5 border text-xs font-bold cursor-pointer ${
                   isActive
-                    ? 'bg-amber-500 text-slate-950 border-amber-500 shadow-md shadow-amber-500/20'
-                    : 'bg-slate-800/80 hover:bg-slate-800 text-slate-300 hover:text-white border-slate-700/60'
+                    ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-lg shadow-amber-500/25 scale-[1.02]'
+                    : 'bg-slate-800/70 hover:bg-slate-800 text-slate-300 hover:text-white border-slate-700/60 backdrop-blur-sm'
                 }`}
               >
                 <span>{item.label}</span>

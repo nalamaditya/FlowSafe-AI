@@ -84,7 +84,15 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-900 flex flex-col font-sans antialiased selection:bg-amber-500 selection:text-slate-900">
+    <div className="min-h-screen bg-slate-100/90 text-slate-900 flex flex-col font-sans antialiased selection:bg-amber-500 selection:text-slate-900 relative">
+      {/* Dynamic Ambient Background Blur Lights for Depth */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute -top-32 -left-32 w-[550px] h-[550px] bg-blue-300/25 rounded-full blur-[120px]" />
+        <div className="absolute top-1/4 -right-32 w-[550px] h-[550px] bg-amber-300/20 rounded-full blur-[120px]" />
+        <div className="absolute bottom-1/3 -left-20 w-[500px] h-[500px] bg-purple-300/20 rounded-full blur-[120px]" />
+        <div className="absolute -bottom-20 right-1/4 w-[600px] h-[600px] bg-emerald-300/15 rounded-full blur-[130px]" />
+      </div>
+
       {/* Beta01-Style Sleek Dark Top Navbar */}
       <Header
         activePage={activePage}
@@ -95,7 +103,7 @@ export default function App() {
       />
 
       {/* Main Content Workspace Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 md:p-8 space-y-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 md:p-8 space-y-6 relative z-10">
 
         {/* 1. LIVE NOW PAGE */}
         {activePage === 'live' && (
@@ -139,8 +147,8 @@ export default function App() {
 
       </main>
 
-      {/* Clean Light Footer */}
-      <footer className="py-6 text-center text-xs text-slate-500 border-t border-slate-200 bg-white mt-auto space-y-1">
+      {/* Clean Frosted Light Footer */}
+      <footer className="py-6 text-center text-xs text-slate-500 border-t border-slate-200/80 bg-white/80 backdrop-blur-md mt-auto space-y-1 relative z-10 shadow-sm">
         <p className="font-semibold text-slate-700">
           FLOWSAFE AI • Predict. Prevent. Protect. • Ideathon 2K26 Prototype
         </p>

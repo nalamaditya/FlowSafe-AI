@@ -48,9 +48,9 @@ export default function FutureForecastSection({
   );
 
   return (
-    <section className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-6">
+    <section className="bg-white/85 backdrop-blur-xl rounded-3xl border border-white/80 shadow-[0_10px_30px_rgb(0,0,0,0.04)] p-6 space-y-6">
       {/* Section Title */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100/80">
         <div>
           <h2 className="text-lg font-black text-slate-900 leading-tight">
             Check Future Crowd & Smart Recommendations
@@ -60,13 +60,13 @@ export default function FutureForecastSection({
           </p>
         </div>
 
-        <span className="text-[11px] font-mono font-bold text-amber-800 bg-amber-50 px-3 py-1 rounded-full border border-amber-200 self-start sm:self-auto shrink-0">
+        <span className="text-[11px] font-mono font-bold text-amber-800 bg-amber-50/90 px-3.5 py-1 rounded-full border border-amber-200/90 self-start sm:self-auto shrink-0 shadow-xs">
           Confidence: {forecastData.confidence}% (Model Baseline)
         </span>
       </div>
 
-      {/* Selectors Bar: Location + Date + Time */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-5 rounded-2xl bg-slate-50 border border-slate-200 text-xs">
+      {/* Selectors Bar with Sunken Depth */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-5 rounded-2xl bg-slate-50/90 backdrop-blur-md border border-slate-200/80 text-xs shadow-inner">
         {/* 1. Location Selector */}
         <div>
           <label className="font-semibold text-slate-700 block mb-1.5 flex items-center gap-1.5 text-xs">
@@ -76,7 +76,7 @@ export default function FutureForecastSection({
           <select
             value={selectedLocationId}
             onChange={(e) => onSelectLocation(e.target.value)}
-            className="w-full p-2.5 bg-white border border-slate-200 rounded-xl font-semibold text-slate-900 focus:outline-none focus:border-amber-500 cursor-pointer shadow-xs text-xs"
+            className="w-full p-2.5 bg-white/95 border border-slate-200/90 rounded-xl font-semibold text-slate-900 focus:outline-none focus:border-amber-500 cursor-pointer shadow-xs text-xs"
           >
             {selectedEnv.locations.map(loc => (
               <option key={loc.id} value={loc.id}>
@@ -95,7 +95,7 @@ export default function FutureForecastSection({
           <select
             value={selectedDate}
             onChange={(e) => onSelectDate(e.target.value)}
-            className="w-full p-2.5 bg-white border border-slate-200 rounded-xl font-semibold text-slate-900 focus:outline-none focus:border-blue-500 cursor-pointer shadow-xs text-xs"
+            className="w-full p-2.5 bg-white/95 border border-slate-200/90 rounded-xl font-semibold text-slate-900 focus:outline-none focus:border-blue-500 cursor-pointer shadow-xs text-xs"
           >
             <option value="Today">Today (Current Day Pattern)</option>
             <option value="Tomorrow">Tomorrow (Weekday Schedule)</option>
@@ -113,7 +113,7 @@ export default function FutureForecastSection({
           <select
             value={selectedTimeStr}
             onChange={(e) => onSelectTime(e.target.value)}
-            className="w-full p-2.5 bg-white border border-slate-200 rounded-xl font-semibold text-slate-900 focus:outline-none focus:border-purple-500 cursor-pointer shadow-xs text-xs"
+            className="w-full p-2.5 bg-white/95 border border-slate-200/90 rounded-xl font-semibold text-slate-900 focus:outline-none focus:border-purple-500 cursor-pointer shadow-xs text-xs"
           >
             <option value="8:00 AM">8:00 AM</option>
             <option value="9:00 AM">9:00 AM</option>
@@ -137,10 +137,10 @@ export default function FutureForecastSection({
         </div>
       </div>
 
-      {/* 4 Prediction Cards (2 cols on mobile, 4 on desktop) */}
+      {/* 4 Prediction Cards with Elevation */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {/* Expected Crowd */}
-        <div className="p-5 rounded-3xl border border-slate-200 bg-white shadow-sm space-y-1">
+        <div className="p-5 rounded-3xl border border-white/80 bg-white/90 backdrop-blur-md shadow-sm hover:shadow-md transition-all space-y-1">
           <span className="text-[11px] font-semibold text-slate-500 uppercase block truncate">Expected Crowd</span>
           <div className="text-2xl font-black text-slate-900 font-mono">
             {forecastData.expectedCrowd}
@@ -149,26 +149,26 @@ export default function FutureForecastSection({
         </div>
 
         {/* Expected Occupancy */}
-        <div className="p-5 rounded-3xl border border-slate-200 bg-white shadow-sm space-y-1">
+        <div className="p-5 rounded-3xl border border-white/80 bg-white/90 backdrop-blur-md shadow-sm hover:shadow-md transition-all space-y-1">
           <span className="text-[11px] font-semibold text-slate-500 uppercase block truncate">Expected Occupancy</span>
           <div className="text-2xl font-black font-mono" style={{ color: status.color }}>
             {forecastData.expectedOccupancy}%
           </div>
-          <span className={`text-[10px] px-2.5 py-0.5 rounded-full inline-block font-mono font-bold ${
+          <span className={`text-[10px] px-2.5 py-0.5 rounded-full inline-block font-mono font-bold shadow-2xs ${
             status.level === 'closed'
-              ? 'bg-slate-100 text-slate-600 border border-slate-200'
+              ? 'bg-slate-100/90 text-slate-600 border border-slate-200'
               : status.level === 'critical' || status.level === 'high'
-              ? 'bg-rose-50 text-rose-700 border border-rose-200'
+              ? 'bg-rose-50/90 text-rose-700 border border-rose-200'
               : status.level === 'moderate'
-              ? 'bg-amber-50 text-amber-700 border border-amber-200'
-              : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+              ? 'bg-amber-50/90 text-amber-700 border border-amber-200'
+              : 'bg-emerald-50/90 text-emerald-700 border border-emerald-200'
           }`}>
             {status.dot} {status.label}
           </span>
         </div>
 
         {/* Expected Wait Time */}
-        <div className="p-5 rounded-3xl border border-slate-200 bg-white shadow-sm space-y-1">
+        <div className="p-5 rounded-3xl border border-white/80 bg-white/90 backdrop-blur-md shadow-sm hover:shadow-md transition-all space-y-1">
           <span className="text-[11px] font-semibold text-slate-500 uppercase block truncate">Expected Wait</span>
           <div className="text-2xl font-black text-slate-900 font-mono">
             {forecastData.expectedWaitTime} mins
@@ -177,10 +177,10 @@ export default function FutureForecastSection({
         </div>
 
         {/* Congestion Status */}
-        <div className={`p-5 rounded-3xl border shadow-sm space-y-1 ${
+        <div className={`p-5 rounded-3xl border shadow-sm hover:shadow-md transition-all space-y-1 ${
           status.level === 'critical' || status.level === 'high'
-            ? 'bg-rose-50/70 border-rose-200'
-            : 'bg-emerald-50/70 border-emerald-200'
+            ? 'bg-rose-50/80 border-rose-200'
+            : 'bg-emerald-50/80 border-emerald-200'
         }`}>
           <span className="text-[11px] font-semibold text-slate-500 uppercase block truncate">Status</span>
           <div className="text-2xl font-black font-mono truncate" style={{ color: status.color }}>
@@ -193,7 +193,7 @@ export default function FutureForecastSection({
       </div>
 
       {/* Forecast Graph: Historical + Current + Predicted */}
-      <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200 space-y-4">
+      <div className="p-6 rounded-3xl bg-slate-50/90 backdrop-blur-md border border-slate-200/80 space-y-4 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
             <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
@@ -204,10 +204,10 @@ export default function FutureForecastSection({
 
           <div className="flex items-center gap-3 text-xs font-mono">
             <span className="flex items-center gap-1.5 text-blue-600 font-bold">
-              <span className="w-2.5 h-2.5 rounded-full bg-blue-500" /> Historical
+              <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-xs" /> Historical
             </span>
             <span className="flex items-center gap-1.5 text-rose-600 font-bold">
-              <span className="w-2.5 h-2.5 rounded-full bg-rose-500" /> Target ({forecastData.targetTimeFormatted})
+              <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-xs" /> Target ({forecastData.targetTimeFormatted})
             </span>
           </div>
         </div>
@@ -230,7 +230,7 @@ export default function FutureForecastSection({
                     const cap = location.capacity;
                     const pct = Math.round((val / cap) * 100);
                     return (
-                      <div className="bg-white p-3 rounded-2xl border border-slate-200 shadow-lg text-xs space-y-0.5">
+                      <div className="bg-white/95 backdrop-blur-md p-3 rounded-2xl border border-slate-200 shadow-xl text-xs space-y-0.5">
                         <p className="font-bold text-slate-900">{label}</p>
                         <p className="text-blue-600 font-mono font-bold">Footfall: {val} / {cap}</p>
                         <p className="text-slate-500 font-mono">Occupancy: {pct}%</p>
@@ -260,7 +260,7 @@ export default function FutureForecastSection({
       </div>
 
       {/* Explainable AI: Why This Prediction? */}
-      <div className="p-6 rounded-3xl border border-slate-200 bg-white shadow-sm space-y-4">
+      <div className="p-6 rounded-3xl border border-white/80 bg-white/90 backdrop-blur-md shadow-sm space-y-4">
         <div className="flex items-center gap-2 text-slate-900 font-bold text-xs uppercase tracking-wider font-mono">
           <Info className="w-4 h-4 text-blue-600 shrink-0" />
           <span>Why This Prediction? (Explainable AI Causal Factors)</span>
@@ -272,7 +272,7 @@ export default function FutureForecastSection({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {forecastData.reasons.map((reason, idx) => (
-            <div key={idx} className="flex items-start gap-2.5 p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs">
+            <div key={idx} className="flex items-start gap-2.5 p-3.5 rounded-2xl bg-slate-50/90 border border-slate-200/80 text-xs shadow-2xs">
               <span className="w-2 h-2 rounded-full bg-blue-600 shrink-0 mt-1.5" />
               <span className="text-slate-700 font-medium leading-relaxed">{reason}</span>
             </div>
@@ -280,13 +280,13 @@ export default function FutureForecastSection({
         </div>
       </div>
 
-      {/* FlowSafe Action Plan & Recommendations Suite */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-slate-900 text-white shadow-xl border border-slate-800 space-y-6">
+      {/* FlowSafe Action Plan & Recommendations Suite with Deep Contrast */}
+      <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/95 backdrop-blur-xl text-white shadow-2xl border border-slate-800 space-y-6">
         {/* Header with Impact Badges */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="p-2 rounded-xl bg-amber-500/20 text-amber-400 shrink-0">
+              <span className="p-2 rounded-xl bg-amber-500/20 text-amber-400 shrink-0 shadow-xs">
                 <Sparkles className="w-4 h-4" />
               </span>
               <h3 className="text-lg font-black text-white">
@@ -301,23 +301,23 @@ export default function FutureForecastSection({
           {/* Metrics */}
           <div className="flex items-center gap-2.5 text-xs font-mono shrink-0">
             {rec.timeSavedPct > 0 && (
-              <div className="p-2 px-3.5 rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-center">
+              <div className="p-2 px-3.5 rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-center shadow-xs">
                 <span className="text-[9px] text-emerald-300 block font-sans font-bold">WAIT REDUCTION</span>
                 <span className="font-extrabold text-sm">-{rec.timeSavedPct}% Time</span>
               </div>
             )}
-            <div className="p-2 px-3.5 rounded-2xl bg-blue-500/20 text-blue-400 border border-blue-500/30 text-center">
+            <div className="p-2 px-3.5 rounded-2xl bg-blue-500/20 text-blue-400 border border-blue-500/30 text-center shadow-xs">
               <span className="text-[9px] text-blue-300 block font-sans font-bold">PREVENTION</span>
               <span className="font-extrabold text-sm">Proactive</span>
             </div>
           </div>
         </div>
 
-        {/* 4 Recommendations Pillars (Beta01 Card Grid) */}
+        {/* 4 Recommendations Pillars */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
 
           {/* PILLAR 1: Optimal Visiting Windows */}
-          <div className="p-5 rounded-3xl bg-slate-800/80 border border-slate-700/80 shadow-md space-y-3.5 flex flex-col justify-between">
+          <div className="p-5 rounded-3xl bg-slate-800/80 backdrop-blur-md border border-slate-700/80 shadow-md space-y-3.5 flex flex-col justify-between">
             <div className="space-y-2.5">
               <div className="flex items-center gap-2 text-white font-bold text-xs uppercase tracking-wider font-mono">
                 <Clock className="w-4 h-4 text-amber-400 shrink-0" />
@@ -328,7 +328,7 @@ export default function FutureForecastSection({
               </p>
 
               {/* Primary Best Slot */}
-              <div className="p-3.5 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 space-y-1">
+              <div className="p-3.5 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 space-y-1 shadow-inner">
                 <div className="flex items-center justify-between gap-1">
                   <span className="font-extrabold text-emerald-400 text-sm font-mono truncate">
                     ★ Primary: {rec.primarySlot.time}
@@ -359,7 +359,7 @@ export default function FutureForecastSection({
           </div>
 
           {/* PILLAR 2: Uncrowded Alternatives */}
-          <div className="p-5 rounded-3xl bg-slate-800/80 border border-slate-700/80 shadow-md space-y-3.5 flex flex-col justify-between">
+          <div className="p-5 rounded-3xl bg-slate-800/80 backdrop-blur-md border border-slate-700/80 shadow-md space-y-3.5 flex flex-col justify-between">
             <div className="space-y-2.5">
               <div className="flex items-center gap-2 text-white font-bold text-xs uppercase tracking-wider font-mono">
                 <Navigation className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -407,7 +407,7 @@ export default function FutureForecastSection({
           </div>
 
           {/* PILLAR 3: Actionable Advice for Visitors / Students */}
-          <div className="p-5 rounded-3xl bg-slate-800/80 border border-slate-700/80 shadow-md space-y-3">
+          <div className="p-5 rounded-3xl bg-slate-800/80 backdrop-blur-md border border-slate-700/80 shadow-md space-y-3">
             <div className="flex items-center gap-2 text-white font-bold text-xs uppercase tracking-wider font-mono">
               <UserCheck className="w-4 h-4 text-purple-400 shrink-0" />
               <span>3. Visitor Action Guide</span>
@@ -427,7 +427,7 @@ export default function FutureForecastSection({
           </div>
 
           {/* PILLAR 4: Venue Operator Directives */}
-          <div className="p-5 rounded-3xl bg-slate-800/80 border border-slate-700/80 shadow-md space-y-3">
+          <div className="p-5 rounded-3xl bg-slate-800/80 backdrop-blur-md border border-slate-700/80 shadow-md space-y-3">
             <div className="flex items-center gap-2 text-white font-bold text-xs uppercase tracking-wider font-mono">
               <Building className="w-4 h-4 text-amber-400 shrink-0" />
               <span>4. Management Directives</span>

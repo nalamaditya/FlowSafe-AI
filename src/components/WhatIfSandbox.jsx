@@ -40,9 +40,9 @@ export default function WhatIfSandbox({
   ];
 
   return (
-    <section className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-6">
+    <section className="bg-white/85 backdrop-blur-xl rounded-3xl border border-white/80 shadow-[0_10px_30px_rgb(0,0,0,0.04)] p-6 space-y-6">
       {/* Title & Description */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100/80">
         <div>
           <h2 className="text-lg font-black text-slate-900 leading-tight">
             Interactive “What-If?” Stress Test Laboratory
@@ -52,7 +52,7 @@ export default function WhatIfSandbox({
           </p>
         </div>
 
-        <span className="text-[11px] font-mono font-bold px-3 py-1 rounded-full bg-purple-50 text-purple-700 border border-purple-200 self-start sm:self-auto shrink-0">
+        <span className="text-[11px] font-mono font-bold px-3.5 py-1 rounded-full bg-purple-50/90 text-purple-700 border border-purple-200/90 self-start sm:self-auto shrink-0 shadow-xs">
           Capacity: {simulation.location.capacity} Max
         </span>
       </div>
@@ -69,10 +69,10 @@ export default function WhatIfSandbox({
               <button
                 key={preset.label}
                 onClick={() => setAdditionalVisitors(preset.value)}
-                className={`p-3.5 rounded-2xl border text-left transition-all cursor-pointer ${
+                className={`p-3.5 rounded-2xl border text-left transition-all duration-200 cursor-pointer ${
                   isSelected
-                    ? 'bg-purple-600 text-white border-purple-600 shadow-md shadow-purple-600/20'
-                    : 'bg-slate-50 hover:bg-slate-100 text-slate-800 border-slate-200'
+                    ? 'bg-purple-600 text-white border-purple-500 shadow-md shadow-purple-600/25 scale-[1.02]'
+                    : 'bg-white/80 hover:bg-white text-slate-800 border-slate-200/80 shadow-xs backdrop-blur-sm'
                 }`}
               >
                 <span className="font-bold text-xs block leading-tight">{preset.label}</span>
@@ -85,23 +85,23 @@ export default function WhatIfSandbox({
         </div>
       </div>
 
-      {/* Interactive Influx Slider & Live Delta Metrics */}
-      <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+      {/* Interactive Influx Slider with Sunken Depth */}
+      <div className="p-5 rounded-2xl bg-slate-50/90 backdrop-blur-md border border-slate-200/80 space-y-3 shadow-inner">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
             <Sliders className="w-4 h-4 text-purple-600 shrink-0" />
             <span>Simulated Sudden Surge:</span>
-            <span className="text-sm font-black font-mono text-purple-700 bg-purple-100 px-3 py-0.5 rounded-lg border border-purple-200">
+            <span className="text-sm font-black font-mono text-purple-700 bg-purple-100 px-3 py-0.5 rounded-lg border border-purple-200 shadow-xs">
               +{additionalVisitors} Extra People
             </span>
           </div>
 
           {/* Delta Chips */}
           <div className="flex items-center gap-2 text-xs font-mono font-bold">
-            <span className="text-rose-700 bg-rose-50 px-2.5 py-0.5 rounded-full border border-rose-200">
+            <span className="text-rose-700 bg-rose-50/90 px-3 py-0.5 rounded-full border border-rose-200 shadow-2xs">
               +{simulation.deltaOccupancy}% Occupancy
             </span>
-            <span className="text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
+            <span className="text-amber-700 bg-amber-50/90 px-3 py-0.5 rounded-full border border-amber-200 shadow-2xs">
               +{simulation.deltaWait} min Delay
             </span>
           </div>
@@ -116,7 +116,7 @@ export default function WhatIfSandbox({
             step="25"
             value={additionalVisitors}
             onChange={(e) => setAdditionalVisitors(Number(e.target.value))}
-            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-purple-600"
+            className="w-full h-2 bg-slate-200/90 rounded-lg appearance-none cursor-pointer accent-purple-600"
           />
         </div>
 
@@ -130,7 +130,7 @@ export default function WhatIfSandbox({
       </div>
 
       {/* Visual Capacity & Safety Buffer Bar */}
-      <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2.5">
+      <div className="p-5 rounded-2xl bg-white/90 backdrop-blur-md border border-slate-200/80 shadow-sm space-y-2.5">
         <div className="flex items-center justify-between text-xs font-mono">
           <span className="font-bold text-slate-700 font-sans text-xs">
             Physical Capacity Utilization:
@@ -141,7 +141,7 @@ export default function WhatIfSandbox({
         </div>
 
         {/* Multi-segment capacity bar */}
-        <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden flex">
+        <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden flex shadow-inner">
           <div 
             className="h-full bg-blue-600 transition-all duration-300"
             style={{ width: `${Math.min(100, simulation.original.occupancyPct)}%` }}
@@ -172,13 +172,13 @@ export default function WhatIfSandbox({
       {/* 3-Way Comparative Grid: Original vs Uncontrolled Surge vs FlowSafe Mitigated */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* 1. Original Baseline */}
-        <div className="p-5 rounded-3xl border border-slate-200 bg-white space-y-3 shadow-sm">
+        <div className="p-5 rounded-3xl border border-white/80 bg-white/90 backdrop-blur-md space-y-3 shadow-sm hover:shadow-md transition-all">
           <div className="flex items-center justify-between pb-2 border-b border-slate-100">
             <span className="text-[11px] font-bold text-slate-500 uppercase font-mono">1. Baseline</span>
-            <span className={`text-[10px] px-2.5 py-0.5 rounded-full border font-mono font-bold ${
+            <span className={`text-[10px] px-2.5 py-0.5 rounded-full border font-mono font-bold shadow-2xs ${
               simulation.original.status.level === 'closed'
-                ? 'bg-slate-100 text-slate-600 border-slate-200'
-                : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                ? 'bg-slate-100/90 text-slate-600 border-slate-200'
+                : 'bg-emerald-50/90 text-emerald-700 border-emerald-200'
             }`}>
               {simulation.original.status.dot} {simulation.original.status.label}
             </span>
@@ -201,18 +201,18 @@ export default function WhatIfSandbox({
         </div>
 
         {/* 2. Uncontrolled Surge (Without AI) */}
-        <div className={`p-5 rounded-3xl border space-y-3 shadow-sm ${
+        <div className={`p-5 rounded-3xl border space-y-3 shadow-sm hover:shadow-md transition-all ${
           simulation.isOverload 
-            ? 'bg-rose-50/70 border-rose-200' 
-            : 'bg-amber-50/70 border-amber-200'
+            ? 'bg-rose-50/80 border-rose-200/90 backdrop-blur-md' 
+            : 'bg-amber-50/80 border-amber-200/90 backdrop-blur-md'
         }`}>
           <div className="flex items-center justify-between pb-2 border-b border-slate-200/60">
             <span className="text-[11px] font-bold text-rose-900 uppercase font-mono">
               2. Unmanaged Surge (+{additionalVisitors})
             </span>
-            <span className={`text-[10px] px-2.5 py-0.5 rounded-full border font-mono font-bold ${
+            <span className={`text-[10px] px-2.5 py-0.5 rounded-full border font-mono font-bold shadow-2xs ${
               simulation.scenario.status.level === 'closed'
-                ? 'bg-slate-100 text-slate-600 border-slate-200'
+                ? 'bg-slate-100/90 text-slate-600 border-slate-200'
                 : 'bg-rose-100 text-rose-800 border-rose-200'
             }`}>
               {simulation.scenario.status.dot} {simulation.scenario.status.label}
@@ -238,13 +238,13 @@ export default function WhatIfSandbox({
         </div>
 
         {/* 3. FlowSafe AI Mitigated Outcome */}
-        <div className="p-5 rounded-3xl border-2 border-emerald-500 bg-emerald-50/70 space-y-3 shadow-sm">
+        <div className="p-5 rounded-3xl border-2 border-emerald-500 bg-emerald-50/80 backdrop-blur-md space-y-3 shadow-md hover:shadow-lg transition-all">
           <div className="flex items-center justify-between pb-2 border-b border-emerald-200">
             <span className="text-[11px] font-bold text-emerald-900 uppercase flex items-center gap-1.5 font-mono">
               <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
               <span>3. Mitigated with AI</span>
             </span>
-            <span className={`text-[10px] px-2.5 py-0.5 rounded-full border font-mono font-bold ${
+            <span className={`text-[10px] px-2.5 py-0.5 rounded-full border font-mono font-bold shadow-2xs ${
               simulation.mitigated.status.level === 'closed'
                 ? 'bg-slate-100 text-slate-600 border-slate-200'
                 : 'bg-emerald-100 text-emerald-800 border-emerald-300'
@@ -271,10 +271,10 @@ export default function WhatIfSandbox({
       </div>
 
       {/* FlowSafe Proactive Mitigation Directives Suite */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-slate-900 text-white shadow-xl border border-slate-800 space-y-4">
+      <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/95 backdrop-blur-xl text-white shadow-2xl border border-slate-800 space-y-4">
         <div className="flex items-center justify-between pb-3 border-b border-slate-800">
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-xl bg-purple-500/20 text-purple-400">
+            <span className="p-1.5 rounded-xl bg-purple-500/20 text-purple-400 shadow-xs">
               <Zap className="w-4 h-4" />
             </span>
             <h3 className="text-xs sm:text-sm font-bold text-white uppercase tracking-wider font-mono">
@@ -283,7 +283,7 @@ export default function WhatIfSandbox({
           </div>
 
           {simulation.mitigated.timeSavedPct > 0 && (
-            <span className="text-[11px] font-mono font-bold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+            <span className="text-[11px] font-mono font-bold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-xs">
               -{simulation.mitigated.timeSavedPct}% Queue Reduction
             </span>
           )}
@@ -297,7 +297,7 @@ export default function WhatIfSandbox({
         {/* Action Directives List */}
         <div className="space-y-2 pt-1 text-xs">
           {simulation.physicalDirectives.map((action, idx) => (
-            <div key={idx} className="flex items-start gap-2.5 p-3.5 rounded-2xl bg-slate-800/90 border border-slate-700/80 text-slate-200 font-medium">
+            <div key={idx} className="flex items-start gap-2.5 p-3.5 rounded-2xl bg-slate-800/90 border border-slate-700/80 text-slate-200 font-medium shadow-xs">
               <ArrowRight className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
               <span>{action}</span>
             </div>
