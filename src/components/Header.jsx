@@ -35,7 +35,7 @@ export default function Header({
                 </span>
               </div>
               <p className="text-[10px] sm:text-xs text-slate-500 font-medium tracking-tight truncate max-w-[200px] sm:max-w-none">
-                Predict. Guide. Protect.
+                Predict. Prevent. Protect.
               </p>
             </div>
           </div>
