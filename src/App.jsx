@@ -142,7 +142,7 @@ export default function App() {
       {/* Clean Light Footer */}
       <footer className="py-5 text-center text-xs text-slate-400 border-t border-slate-200 bg-white mt-auto space-y-1">
         <p className="font-semibold text-slate-600">
-          FLOWSAFE AI • Predict. Prevent. Protect. • Ideathon 2K26 Prototype
+          FLOWSAFE AI • Predict. Guide. Protect. • Ideathon 2K26 Prototype
         </p>
         <p className="text-[11px] text-slate-400">
           Context-Aware Crowd Intelligence Engine • Deterministic Simulated Prototype Data
