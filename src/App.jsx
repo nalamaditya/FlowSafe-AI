@@ -84,8 +84,8 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans antialiased">
-      {/* Sleek Top Navbar */}
+    <div className="min-h-screen bg-slate-100 text-slate-900 flex flex-col font-sans antialiased selection:bg-amber-500 selection:text-slate-900">
+      {/* Beta01-Style Sleek Dark Top Navbar */}
       <Header
         activePage={activePage}
         onSelectPage={setActivePage}
@@ -94,10 +94,10 @@ export default function App() {
         onResetToRealTime={handleResetToRealTime}
       />
 
-      {/* Main Page Container */}
-      <main className="flex-1 max-w-6xl w-full mx-auto p-3.5 sm:p-5 md:p-6 space-y-4 sm:space-y-6">
+      {/* Main Content Workspace Container */}
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 md:p-8 space-y-6">
 
-        {/* 1. LIVE NOW PAGE (WHAT IS HAPPENING NOW?) */}
+        {/* 1. LIVE NOW PAGE */}
         {activePage === 'live' && (
           <LiveNowPage
             selectedEnvId={selectedEnvId}
@@ -111,7 +111,7 @@ export default function App() {
           />
         )}
 
-        {/* 2. FUTURE FORECAST & SMART RECOMMENDATIONS PAGE (WHAT WILL HAPPEN & WHAT TO DO) */}
+        {/* 2. FUTURE FORECAST & SMART RECOMMENDATIONS PAGE */}
         {activePage === 'forecast' && (
           <ForecastPage
             selectedEnvId={selectedEnvId}
@@ -127,7 +127,7 @@ export default function App() {
           />
         )}
 
-        {/* 3. WHAT-IF SIMULATOR & SCENARIO STRESS LAB */}
+        {/* 3. WHAT-IF SIMULATOR */}
         {activePage === 'simulator' && (
           <SimulatorPage />
         )}
@@ -140,12 +140,12 @@ export default function App() {
       </main>
 
       {/* Clean Light Footer */}
-      <footer className="py-5 text-center text-xs text-slate-400 border-t border-slate-200 bg-white mt-auto space-y-1">
-        <p className="font-semibold text-slate-600">
+      <footer className="py-6 text-center text-xs text-slate-500 border-t border-slate-200 bg-white mt-auto space-y-1">
+        <p className="font-semibold text-slate-700">
           FLOWSAFE AI • Predict. Prevent. Protect. • Ideathon 2K26 Prototype
         </p>
-        <p className="text-[11px] text-slate-400">
-          Context-Aware Crowd Intelligence Engine • Deterministic Simulated Prototype Data
+        <p className="text-[11px] text-slate-400 font-mono">
+          Context-Aware Crowd Intelligence Engine • Powered by Synapse³
         </p>
       </footer>
     </div>
