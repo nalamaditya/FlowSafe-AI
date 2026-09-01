@@ -11,13 +11,31 @@ export default function LiveNowGrid({
 }) {
   const env = liveData.environment;
 
-  // Preset quick jump times for easy judging demo
-  const presetTimes = [
-    { label: '9:00 AM (Morning)', decimal: 9.0 },
-    { label: '1:00 PM (Lunch)', decimal: 13.0 },
-    { label: '4:30 PM (Closing)', decimal: 16.5 },
-    { label: '7:00 PM (Evening)', decimal: 19.0 },
-  ];
+  // Preset quick jump times for easy judging demo tailored to venue operating schedules
+  const presetTimes = env.id === 'campus'
+    ? [
+        { label: '7:30 AM (Opens)', decimal: 7.5 },
+        { label: '9:00 AM (College Starts)', decimal: 9.0 },
+        { label: '1:00 PM (Lunch Rush)', decimal: 13.0 },
+        { label: '4:00 PM (College Ends)', decimal: 16.0 },
+        { label: '5:30 PM (Few Stay)', decimal: 17.5 },
+        { label: '8:00 PM (Closed)', decimal: 20.0 },
+      ]
+    : env.id === 'hospital'
+    ? [
+        { label: '2:00 AM (24/7 Triage)', decimal: 2.0 },
+        { label: '9:00 AM (Morning OPD)', decimal: 9.0 },
+        { label: '1:00 PM (Midday Clinic)', decimal: 13.0 },
+        { label: '6:00 PM (Evening Shift)', decimal: 18.0 },
+        { label: '11:00 PM (Night Urgent)', decimal: 23.0 },
+      ]
+    : [
+        { label: '9:00 AM (Morning)', decimal: 9.0 },
+        { label: '1:00 PM (Afternoon)', decimal: 13.0 },
+        { label: '5:00 PM (Peak Ingress)', decimal: 17.0 },
+        { label: '8:30 PM (Evening)', decimal: 20.5 },
+        { label: '11:30 PM (Night)', decimal: 23.5 },
+      ];
 
   return (
     <section className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm space-y-4 sm:space-y-5">

@@ -3,7 +3,18 @@ import { ENVIRONMENTS } from '../data/environmentsData';
 /**
  * Calculates deterministic crowd status and semantic badge colors based on occupancy %
  */
-export function calculateStatus(occupancyPct) {
+export function calculateStatus(occupancyPct, isClosed = false) {
+  if (isClosed) {
+    return {
+      label: 'CLOSED',
+      level: 'closed',
+      dot: '⚪',
+      color: '#94a3b8',
+      badgeClass: 'bg-slate-100 text-slate-600 border-slate-300 font-bold',
+      pillClass: 'bg-slate-400 text-white'
+    };
+  }
+
   if (occupancyPct >= 85) {
     return {
       label: 'CRITICAL',
@@ -80,13 +91,106 @@ export function decimalToTimeString(decimal) {
 }
 
 /**
- * Smoothly interpolates the crowd for a given location at any decimal hour
+ * Strict Venue Operating Hours Matrix
+ * - College Campus: Opens 7:30 AM, Classes start 9:00 AM, Ends 4:00 PM, Few stay till 6:00 PM, After 6:00 PM CLOSED.
+ * - Hospital: Open 24/7 (Never Closed).
+ * - Stadium: 1:00 PM to 10:30 PM.
+ * - Movie Theatre: 10:30 AM to 11:30 PM.
+ * - Shopping Mall: 10:00 AM to 10:30 PM.
  */
-export function interpolateCrowd(location, decimalHour, extraVisitors = 0) {
+export const VENUE_OPERATING_HOURS = {
+  campus: {
+    name: 'College Campus',
+    open: 7.5,        // Opens at 7:30 AM
+    close: 18.0,      // Closes at 6:00 PM (Ends at 4:00 PM, few stay till 6:00 PM, after 6:00 PM CLOSED)
+    coreStart: 9.0,   // Classes start at 9:00 AM (mostly students come at 9)
+    coreEnd: 16.0,    // Classes end at 4:00 PM
+    openStr: '7:30 AM',
+    closeStr: '6:00 PM',
+    is24_7: false,
+    activeSlots: [9.0, 9.5, 10.0, 10.5, 11.0, 11.5, 12.0, 13.0, 14.0, 14.5, 15.0, 15.5]
+  },
+  hospital: {
+    name: 'Hospital & Healthcare',
+    open: 0.0,        // Open 24/7
+    close: 24.0,
+    coreStart: 0.0,
+    coreEnd: 24.0,
+    openStr: 'Open 24/7',
+    closeStr: 'Open 24/7',
+    is24_7: true,
+    activeSlots: [8.5, 9.0, 10.0, 11.0, 11.5, 14.0, 14.5, 15.5, 17.0, 19.0, 21.0]
+  },
+  stadium: {
+    name: 'Sports Stadium',
+    open: 13.0,       // 1:00 PM
+    close: 22.5,      // 10:30 PM
+    coreStart: 14.0,
+    coreEnd: 21.0,
+    openStr: '1:00 PM',
+    closeStr: '10:30 PM',
+    is24_7: false,
+    activeSlots: [14.0, 15.0, 16.0, 17.0, 19.5, 20.0, 21.0]
+  },
+  cinema: {
+    name: 'Movie Theatre',
+    open: 10.5,       // 10:30 AM
+    close: 23.5,      // 11:30 PM
+    coreStart: 11.0,
+    coreEnd: 23.0,
+    openStr: '10:30 AM',
+    closeStr: '11:30 PM',
+    is24_7: false,
+    activeSlots: [11.5, 12.5, 14.5, 16.0, 17.5, 20.0, 21.0, 22.0]
+  },
+  mall: {
+    name: 'Shopping Mall',
+    open: 10.0,       // 10:00 AM
+    close: 22.5,      // 10:30 PM
+    coreStart: 11.0,
+    coreEnd: 21.5,
+    openStr: '10:00 AM',
+    closeStr: '10:30 PM',
+    is24_7: false,
+    activeSlots: [11.0, 12.0, 14.0, 15.0, 16.0, 17.0, 18.5, 20.0, 21.0]
+  }
+};
+
+/**
+ * Smoothly interpolates the crowd for a given location at any decimal hour,
+ * strictly respecting venue operating hours.
+ */
+export function interpolateCrowd(location, decimalHour, extraVisitors = 0, environmentId = 'campus') {
+  const venueHours = VENUE_OPERATING_HOURS[environmentId] || VENUE_OPERATING_HOURS.campus;
+  const capacity = location.capacity || 200;
+
+  // Check if venue is closed
+  const isClosed = !venueHours.is24_7 && (decimalHour < venueHours.open || decimalHour > venueHours.close);
+
+  if (isClosed) {
+    return {
+      crowd: 0,
+      capacity,
+      occupancyPct: 0,
+      waitMin: 0,
+      isClosed: true,
+      status: calculateStatus(0, true)
+    };
+  }
+
   const hourly = location.hourly || {};
   const keys = Object.keys(hourly).sort((a, b) => timeStringToDecimal(a) - timeStringToDecimal(b));
 
-  if (!keys.length) return { crowd: 50, occupancyPct: 25, waitMin: 2, status: calculateStatus(25) };
+  if (!keys.length) {
+    return { 
+      crowd: 50, 
+      capacity, 
+      occupancyPct: 25, 
+      waitMin: 2, 
+      isClosed: false, 
+      status: calculateStatus(25, false) 
+    };
+  }
 
   let prevKey = keys[0];
   let nextKey = keys[keys.length - 1];
@@ -111,74 +215,62 @@ export function interpolateCrowd(location, decimalHour, extraVisitors = 0) {
     const ratio = (decimalHour - t1) / (t2 - t1);
     rawCrowd = v1 + (v2 - v1) * ratio;
   } else if (decimalHour < t1) {
-    // Smooth night decay before opening hours
-    const nightRatio = Math.max(0.1, decimalHour / t1);
-    rawCrowd = Math.round(v1 * nightRatio);
+    const ratio = Math.max(0.1, (decimalHour - venueHours.open) / (t1 - venueHours.open || 1));
+    rawCrowd = Math.round(v1 * ratio);
   } else if (decimalHour > t2) {
-    // Smooth night decay after closing hours
-    const nightRatio = Math.max(0.1, 1 - (decimalHour - t2) / (24 - t2));
-    rawCrowd = Math.round(v2 * nightRatio);
+    const ratio = Math.max(0.05, (venueHours.close - decimalHour) / (venueHours.close - t2 || 1));
+    rawCrowd = Math.round(v2 * ratio);
   }
 
   const baseCrowd = Math.round(rawCrowd);
-  const totalCrowd = Math.max(5, baseCrowd + Number(extraVisitors));
-  const capacity = location.capacity || 200;
-  const occupancyPct = Math.round((totalCrowd / capacity) * 100);
+  const totalCrowd = Math.max(2, baseCrowd + Number(extraVisitors));
+  const occupancyPct = Math.min(100, Math.round((totalCrowd / capacity) * 100));
 
   let waitMin = Math.round((occupancyPct / 100) * (location.baselineWaitMin || 15));
   if (occupancyPct < 30) waitMin = Math.max(1, Math.round(waitMin * 0.3));
 
-  const status = calculateStatus(occupancyPct);
+  const status = calculateStatus(occupancyPct, false);
 
   return {
     crowd: totalCrowd,
     capacity,
     occupancyPct,
     waitMin,
+    isClosed: false,
     status
   };
 }
-
-export const VENUE_OPERATING_HOURS = {
-  campus: {
-    name: 'College Campus',
-    open: 8.5,       // 8:30 AM
-    close: 16.0,     // 4:00 PM (College ends at 4:00 PM)
-    activeSlots: [9.0, 10.0, 10.5, 11.0, 11.5, 12.0, 14.0, 14.5, 15.0, 15.5]
-  },
-  stadium: {
-    name: 'Stadium',
-    open: 14.0,      // 2:00 PM
-    close: 20.5,     // 8:30 PM (Match/Event hours)
-    activeSlots: [14.5, 15.0, 15.5, 16.0, 16.5, 17.0, 19.5, 20.0]
-  },
-  hospital: {
-    name: 'Hospital',
-    open: 8.5,       // 8:30 AM
-    close: 16.5,     // 4:30 PM (OPD Clinics / Regular Consultations)
-    activeSlots: [8.5, 9.0, 10.0, 11.0, 11.5, 14.0, 14.5, 15.5]
-  },
-  cinema: {
-    name: 'Movie Theatre',
-    open: 11.0,      // 11:00 AM
-    close: 22.5,     // 10:30 PM (Screening hours)
-    activeSlots: [11.5, 12.5, 14.5, 16.0, 17.5, 20.0, 21.0]
-  },
-  mall: {
-    name: 'Shopping Mall',
-    open: 10.5,      // 10:30 AM
-    close: 21.5,     // 9:30 PM (Retail hours)
-    activeSlots: [11.0, 12.0, 14.0, 15.0, 16.0, 17.0, 18.5, 20.0]
-  }
-};
 
 /**
  * Calculates live crowd trend and real-time recommendation ("Can I go there now, or should I wait?")
  */
 export function calculateLiveRecommendation(location, decimalHour, environmentId = 'campus') {
-  const current = interpolateCrowd(location, decimalHour);
-  const next10m = interpolateCrowd(location, Math.min(23.75, decimalHour + 10 / 60));
-  const next20m = interpolateCrowd(location, Math.min(23.75, decimalHour + 20 / 60));
+  const venueHours = VENUE_OPERATING_HOURS[environmentId] || VENUE_OPERATING_HOURS.campus;
+  const isClosed = !venueHours.is24_7 && (decimalHour < venueHours.open || decimalHour > venueHours.close);
+
+  if (isClosed) {
+    const trend = {
+      label: 'Closed',
+      symbol: '—',
+      direction: 'closed',
+      textClass: 'text-slate-400 font-medium',
+      badgeClass: 'bg-slate-100 text-slate-500 border-slate-200'
+    };
+    const action = {
+      statusText: 'Venue Closed',
+      statusIcon: '🔒',
+      style: 'bg-slate-50 text-slate-700 border-slate-200',
+      titleColor: 'text-slate-700',
+      explanation: `Venue is currently closed. Operating hours are ${venueHours.openStr} – ${venueHours.closeStr}.`,
+      bestTime: venueHours.openStr,
+      waitMinutes: null
+    };
+    return { trend, action, isClosed: true };
+  }
+
+  const current = interpolateCrowd(location, decimalHour, 0, environmentId);
+  const next10m = interpolateCrowd(location, Math.min(venueHours.close, decimalHour + 10 / 60), 0, environmentId);
+  const next20m = interpolateCrowd(location, Math.min(venueHours.close, decimalHour + 20 / 60), 0, environmentId);
 
   // Determine trend
   const diff20 = next20m.crowd - current.crowd;
@@ -210,16 +302,13 @@ export function calculateLiveRecommendation(location, decimalHour, environmentId
     };
   }
 
-  const venueHours = VENUE_OPERATING_HOURS[environmentId] || { open: 8.5, close: 16.0 };
-  const maxLookahead = venueHours.close;
-
   // Look ahead 15 to 120 mins strictly within venue operating hours
   const forwardOffsets = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
   const upcomingSlots = forwardOffsets
     .map(offset => {
       const h = decimalHour + offset;
-      if (h > maxLookahead || h < venueHours.open) return null;
-      const stat = interpolateCrowd(location, h);
+      if (h > venueHours.close || h < venueHours.open) return null;
+      const stat = interpolateCrowd(location, h, 0, environmentId);
       return {
         hour: h,
         offsetMinutes: Math.round(offset * 60),
@@ -238,18 +327,34 @@ export function calculateLiveRecommendation(location, decimalHour, environmentId
     occupancyPct: 30
   };
 
-  let action = {
-    statusText: 'Good to go now',
-    statusIcon: '✅',
-    style: 'bg-emerald-50 text-emerald-800 border-emerald-200',
-    titleColor: 'text-emerald-700',
-    explanation: 'Low crowd and short waiting time.',
-    bestTime: null,
-    waitMinutes: null
-  };
+  let action;
 
+  // Special Case A: Campus early opening window (7:30 AM to 8:45 AM before 9:00 AM college start)
+  if (environmentId === 'campus' && decimalHour >= 7.5 && decimalHour < 8.75) {
+    action = {
+      statusText: 'Good to go now (Early Window)',
+      statusIcon: '✅',
+      style: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+      titleColor: 'text-emerald-700',
+      explanation: 'Campus opened at 7:30 AM. Classes start at 9:00 AM. Near-zero crowds right now.',
+      bestTime: null,
+      waitMinutes: null
+    };
+  }
+  // Special Case B: Campus evening after-classes window (4:00 PM to 6:00 PM)
+  else if (environmentId === 'campus' && decimalHour >= 16.0 && decimalHour <= 18.0) {
+    action = {
+      statusText: 'Good to go now (Evening Lull)',
+      statusIcon: '✅',
+      style: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+      titleColor: 'text-emerald-700',
+      explanation: 'Classes ended at 4:00 PM. Few students remaining. Campus closes at 6:00 PM.',
+      bestTime: null,
+      waitMinutes: null
+    };
+  }
   // Case 1: Low crowd (< 45%)
-  if (current.occupancyPct < 45) {
+  else if (current.occupancyPct < 45) {
     action = {
       statusText: 'Good to go now',
       statusIcon: '✅',
@@ -314,7 +419,8 @@ export function calculateLiveRecommendation(location, decimalHour, environmentId
 
   return {
     trend,
-    action
+    action,
+    isClosed: false
   };
 }
 
@@ -325,7 +431,7 @@ export function getEnvironmentLiveNow(environmentId, decimalHour) {
   const env = ENVIRONMENTS.find(e => e.id === environmentId) || ENVIRONMENTS[0];
 
   const locationsData = env.locations.map(loc => {
-    const stats = interpolateCrowd(loc, decimalHour);
+    const stats = interpolateCrowd(loc, decimalHour, 0, environmentId);
     const liveInsight = calculateLiveRecommendation(loc, decimalHour, environmentId);
 
     return {
@@ -359,7 +465,8 @@ export function getFutureForecast(environmentId, locationId, selectedTimeStr, da
   const location = env.locations.find(l => l.id === locationId) || env.locations[0];
 
   const decimalHour = timeStringToDecimal(selectedTimeStr);
-  const stats = interpolateCrowd(location, decimalHour);
+  const stats = interpolateCrowd(location, decimalHour, 0, environmentId);
+  const venueHours = VENUE_OPERATING_HOURS[env.id] || VENUE_OPERATING_HOURS.campus;
 
   const isHigh = stats.occupancyPct >= 65;
   const reasons = isHigh ? location.reasonsHigh : location.reasonsLow;
@@ -368,7 +475,7 @@ export function getFutureForecast(environmentId, locationId, selectedTimeStr, da
   const alternatives = env.locations
     .filter(l => l.id !== location.id)
     .map(l => {
-      const altStats = interpolateCrowd(l, decimalHour);
+      const altStats = interpolateCrowd(l, decimalHour, 0, environmentId);
       return {
         id: l.id,
         name: l.name,
@@ -380,19 +487,13 @@ export function getFutureForecast(environmentId, locationId, selectedTimeStr, da
     .sort((a, b) => a.occupancyPct - b.occupancyPct);
 
   // Find optimal time windows strictly within the venue's active operating hours
-  const venueHours = VENUE_OPERATING_HOURS[env.id] || { 
-    open: 8.5, 
-    close: 16.0, 
-    activeSlots: [9.0, 10.0, 10.5, 11.0, 11.5, 14.0, 14.5, 15.0, 15.5] 
-  };
-
   const testHours = venueHours.activeSlots;
   const optimalSlots = testHours
     .filter(h => h >= venueHours.open && h <= venueHours.close && Math.abs(h - decimalHour) >= 0.75)
     .map(h => ({
       hour: h,
       timeFormatted: decimalToTimeString(h),
-      ...interpolateCrowd(location, h)
+      ...interpolateCrowd(location, h, 0, environmentId)
     }))
     .filter(slot => slot.occupancyPct < 55)
     .sort((a, b) => a.occupancyPct - b.occupancyPct);
@@ -420,10 +521,10 @@ export function getFutureForecast(environmentId, locationId, selectedTimeStr, da
     visitorTips = [
       '📱 Use mobile cafeteria pass to pre-order meals and bypass queue lines.',
       '🚶 Transit via the East Corridor staircase to avoid central lobby congestion.',
-      '⏱️ Arrive 15 minutes before lecture intervals or wait 20 minutes post-bell.'
+      '⏱️ Arrive 15 minutes before 9:00 AM class start or wait 20 minutes post-bell.'
     ];
     managerActions = [
-      '🚪 Open Auxiliary Counter 3 and Food Court 2 Annex 15 mins before rush.',
+      '🚪 Open Auxiliary Counter 3 and Food Court 2 Annex 15 mins before lunch rush.',
       '📢 Broadcast digital signage alerts directing students to uncrowded wings.',
       '🛡️ Station 2 student marshals at Canteen entry to maintain one-way movement.'
     ];
@@ -446,7 +547,7 @@ export function getFutureForecast(environmentId, locationId, selectedTimeStr, da
     ];
     managerActions = [
       '🩺 Stagger OPD appointment batches by 20-minute consultation windows.',
-      '🚑 Ensure Emergency triage red-corridor remains 100% physically unobstructed.',
+      '🚑 Ensure Emergency triage red-corridor remains 100% physically unobstructed 24/7.',
       '⚡ Open 2 express billing counters in West Wing during 9 AM–11 AM peak.'
     ];
   } else if (env.id === 'cinema') {
@@ -473,6 +574,15 @@ export function getFutureForecast(environmentId, locationId, selectedTimeStr, da
     ];
   }
 
+  // Summary message with closed state handling
+  let summaryMsg = isHigh 
+    ? `⚠️ High congestion predicted at ${location.name} around ${decimalToTimeString(decimalHour)} (${stats.occupancyPct}% occupancy, ${stats.waitMin} min wait).`
+    : `🟢 Optimal conditions predicted at ${location.name} around ${decimalToTimeString(decimalHour)} (${stats.occupancyPct}% occupancy, ${stats.waitMin} min wait).`;
+
+  if (stats.isClosed) {
+    summaryMsg = `🔒 ${location.name} is scheduled to be CLOSED at ${decimalToTimeString(decimalHour)}. Operating hours are ${venueHours.openStr} – ${venueHours.closeStr}.`;
+  }
+
   return {
     environment: env,
     location,
@@ -484,22 +594,24 @@ export function getFutureForecast(environmentId, locationId, selectedTimeStr, da
     expectedOccupancy: stats.occupancyPct,
     expectedWaitTime: stats.waitMin,
     congestionStatus: stats.status,
+    isClosed: stats.isClosed,
     confidence: 87,
-    reasons: reasons || [
-      'Historical crowd trajectory for this time window',
-      'Arrival rate patterns detected from prior schedules',
-      'Venue capacity limits and service throughput'
-    ],
-    // Rich recommendation suite
+    reasons: stats.isClosed
+      ? [`Venue is closed outside operating hours (${venueHours.openStr} – ${venueHours.closeStr})`, 'No active classes or scheduled sessions during this window', 'Security perimeter locked']
+      : (reasons || [
+          'Historical crowd trajectory for this time window',
+          'Arrival rate patterns detected from prior schedules',
+          'Venue capacity limits and service throughput'
+        ]),
     recommendations: {
-      summary: isHigh 
-        ? `⚠️ High congestion predicted at ${location.name} around ${decimalToTimeString(decimalHour)} (${stats.occupancyPct}% occupancy, ${stats.waitMin} min wait).`
-        : `🟢 Optimal conditions predicted at ${location.name} around ${decimalToTimeString(decimalHour)} (${stats.occupancyPct}% occupancy, ${stats.waitMin} min wait).`,
+      summary: summaryMsg,
       primarySlot: {
         time: primaryBestSlot.timeFormatted,
         waitMin: primaryBestSlot.waitMin,
         occupancy: primaryBestSlot.occupancyPct,
-        desc: `Shift arrival to ${primaryBestSlot.timeFormatted} to reduce wait time to only ${primaryBestSlot.waitMin} mins.`
+        desc: stats.isClosed 
+          ? `Venue opens at ${venueHours.openStr}. Best low-crowd visiting window is at ${primaryBestSlot.timeFormatted}.`
+          : `Shift arrival to ${primaryBestSlot.timeFormatted} to reduce wait time to only ${primaryBestSlot.waitMin} mins.`
       },
       secondarySlot: {
         time: secondaryBestSlot.timeFormatted,
@@ -517,145 +629,132 @@ export function getFutureForecast(environmentId, locationId, selectedTimeStr, da
 }
 
 /**
- * Generates a 24-point daytime continuous curve for Recharts
+ * Generates a high-resolution time series dataset for Recharts area graph
  */
-export function getTimeSeriesForGraph(environmentId, locationId, currentDecimal, selectedDecimal) {
+export function getTimeSeriesForGraph(environmentId, locationId, currentDecimalHour, targetDecimalHour) {
   const env = ENVIRONMENTS.find(e => e.id === environmentId) || ENVIRONMENTS[0];
   const location = env.locations.find(l => l.id === locationId) || env.locations[0];
 
-  const hours = [
-    8.0, 8.5, 9.0, 9.5, 10.0, 10.5, 11.0, 11.5,
-    12.0, 12.5, 13.0, 13.5, 14.0, 14.5, 15.0, 15.5,
-    16.0, 16.5, 17.0, 17.5, 18.0, 19.0, 20.0
-  ];
-
-  return hours.map(h => {
-    const stats = interpolateCrowd(location, h);
-    const label = decimalToTimeString(h);
-
-    const isNearCurrent = Math.abs(h - currentDecimal) <= 0.25;
-    const isNearSelected = Math.abs(h - selectedDecimal) <= 0.25;
-
-    return {
-      time: label,
-      rawHour: h,
-      historicalCrowd: stats.crowd,
-      currentCrowdMarker: isNearCurrent ? stats.crowd : null,
-      predictedCrowdMarker: isNearSelected ? stats.crowd : null,
-      capacity: location.capacity
-    };
-  });
+  const points = [];
+  for (let h = 0; h < 24; h += 0.5) {
+    const stats = interpolateCrowd(location, h, 0, environmentId);
+    points.push({
+      hourDecimal: h,
+      time: decimalToTimeString(h),
+      crowd: stats.crowd,
+      capacity: stats.capacity,
+      occupancyPct: stats.occupancyPct,
+      waitMin: stats.waitMin,
+      isClosed: stats.isClosed,
+      statusLabel: stats.status.label,
+      statusColor: stats.status.color,
+      isTarget: Math.abs(h - targetDecimalHour) < 0.25,
+      isLive: Math.abs(h - currentDecimalHour) < 0.25
+    });
+  }
+  return points;
 }
 
 /**
- * Runs an advanced "What-If" simulation adding extra visitors with proactive mitigation intelligence
+ * Generates a 24-point continuous curve for Recharts (0:00 to 23:00)
  */
-export function runWhatIfSimulation(environmentId, locationId, selectedTimeStr, additionalVisitors = 100) {
+export function generate24HourCurve(location, environmentId = 'campus') {
+  const points = [];
+  for (let h = 0; h < 24; h += 1) {
+    const stats = interpolateCrowd(location, h, 0, environmentId);
+    points.push({
+      hourDecimal: h,
+      timeFormatted: decimalToTimeString(h),
+      crowd: stats.crowd,
+      capacity: stats.capacity,
+      occupancyPct: stats.occupancyPct,
+      waitMin: stats.waitMin,
+      isClosed: stats.isClosed,
+      statusLabel: stats.status.label,
+      statusColor: stats.status.color
+    });
+  }
+  return points;
+}
+
+/**
+ * What-If scenario simulation engine
+ */
+export function runWhatIfSimulation(environmentId, locationId, baseDecimalHour, addedSurgeCount = 0) {
   const env = ENVIRONMENTS.find(e => e.id === environmentId) || ENVIRONMENTS[0];
   const location = env.locations.find(l => l.id === locationId) || env.locations[0];
 
-  const decimalHour = timeStringToDecimal(selectedTimeStr);
-  const original = interpolateCrowd(location, decimalHour, 0);
-  const scenario = interpolateCrowd(location, decimalHour, additionalVisitors);
+  const originalStats = interpolateCrowd(location, baseDecimalHour, 0, environmentId);
+  const scenarioStats = interpolateCrowd(location, baseDecimalHour, addedSurgeCount, environmentId);
 
-  const deltaOccupancy = scenario.occupancyPct - original.occupancyPct;
-  const deltaWait = scenario.waitMin - original.waitMin;
-  const isOverload = scenario.occupancyPct >= 80;
-  const isCritical = scenario.occupancyPct >= 95;
+  const deltaCrowd = scenarioStats.crowd - originalStats.crowd;
+  const deltaOccupancy = scenarioStats.occupancyPct - originalStats.occupancyPct;
+  const deltaWait = scenarioStats.waitMin - originalStats.waitMin;
 
-  // Find lowest crowd alternative locations in the same venue
-  const altLocations = env.locations
+  const isOverload = scenarioStats.occupancyPct >= 85;
+  const isCritical = scenarioStats.occupancyPct >= 100;
+
+  // Find lowest density alternative
+  const otherLocations = env.locations
     .filter(l => l.id !== location.id)
-    .map(l => {
-      const altStat = interpolateCrowd(l, decimalHour);
-      return {
-        id: l.id,
-        name: l.name,
-        icon: l.icon,
-        availableCapacity: Math.max(0, l.capacity - altStat.crowd),
-        ...altStat
-      };
-    })
+    .map(l => ({
+      ...l,
+      ...interpolateCrowd(l, baseDecimalHour, 0, environmentId)
+    }))
     .sort((a, b) => a.occupancyPct - b.occupancyPct);
 
-  const bestAlternative = altLocations[0] || { name: 'Auxiliary Zone', occupancyPct: 30, waitMin: 2, availableCapacity: 100 };
-  const divertCount = Math.min(additionalVisitors, Math.round(additionalVisitors * 0.45));
+  const bestAlt = otherLocations[0] || null;
+  const divertCount = Math.round(Number(addedSurgeCount) * 0.45);
+  const mitigatedCrowd = Math.max(originalStats.crowd, scenarioStats.crowd - divertCount);
+  const mitigatedOccupancy = Math.min(100, Math.round((mitigatedCrowd / location.capacity) * 100));
+  const mitigatedWait = Math.max(originalStats.waitMin, Math.round((mitigatedOccupancy / 100) * (location.baselineWaitMin || 15)));
+  const mitigatedStatus = calculateStatus(mitigatedOccupancy, scenarioStats.isClosed);
 
-  // Compute mitigated scenario metrics
-  const mitigatedCrowd = Math.max(original.crowd, scenario.crowd - divertCount);
-  const mitigatedOccupancy = Math.round((mitigatedCrowd / location.capacity) * 100);
-  const mitigatedWait = Math.max(1, Math.round((mitigatedOccupancy / 100) * (location.baselineWaitMin || 15)));
-  const mitigatedStatus = calculateStatus(mitigatedOccupancy);
-
-  // Concrete physical actions based on venue
   let physicalDirectives = [];
-  if (env.id === 'campus') {
+  if (isCritical) {
     physicalDirectives = [
-      `🔄 Divert ~${divertCount} visitors toward ${bestAlternative.name} (${bestAlternative.occupancyPct}% full, ${bestAlternative.waitMin}m wait).`,
-      `🚪 Open Emergency / Auxiliary Gate 2 and add 2 temporary queue stanchions.`,
-      `📲 Broadcast mobile timetable alert suggesting 15-minute staggered arrival.`
+      `🚨 Implement Emergency Metering: Hold ingress at turnstiles for 90-second pulse intervals.`,
+      `📢 Digital Redirection: Flash directional LED guidance diverting ${divertCount} visitors to ${bestAlt ? bestAlt.name : 'auxiliary areas'}.`,
+      `🛡️ Deploy 3 floor marshals to maintain one-way circulation and keep fire exit aisles clear.`
     ];
-  } else if (env.id === 'stadium') {
+  } else if (isOverload) {
     physicalDirectives = [
-      `🔄 Reroute incoming spectator flow toward ${bestAlternative.name} to balance turnstile pressure.`,
-      `⚡ Deploy 4 rapid handheld scanners to clear perimeter lines within 6 minutes.`,
-      `📢 Activate concourse video boards showing 3-minute wait at ${bestAlternative.name}.`
-    ];
-  } else if (env.id === 'hospital') {
-    physicalDirectives = [
-      `🔄 Direct non-emergency arrivals to ${bestAlternative.name} overflow waiting area.`,
-      `🩺 Open 2 backup consultation counters to absorb outpatient influx.`,
-      `📋 Activate digital queue tokens on mobile to prevent physical corridor crowding.`
-    ];
-  } else if (env.id === 'cinema') {
-    physicalDirectives = [
-      `🍿 Activate Express Popcorn Counter 3 and open secondary exit double-doors.`,
-      `🎟️ Stagger auditorium door opening times by 8 minutes to prevent lobby bottleneck.`,
-      `🚪 Direct departing patrons through East stairwells directly to parking.`
+      `⚡ Open 2 auxiliary service counters immediately to increase throughput.`,
+      `📢 Broadcast mobile alerts advising arriving visitors of a ${scenarioStats.waitMin}-minute delay.`,
+      `🚶 Stagger incoming group batches by 15 minutes.`
     ];
   } else {
     physicalDirectives = [
-      `🔄 Guide ~${divertCount} shoppers toward ${bestAlternative.name} atrium.`,
-      `⚡ Deploy floor security marshals to maintain smooth bidirectional walkway flow.`,
-      `🅿️ Update electronic parking guidance to route incoming cars to Level B3.`
+      `🟢 Standard Flow: Current infrastructure safely absorbs this influx with ${100 - scenarioStats.occupancyPct}% headroom buffer.`,
+      `📊 Continuous Monitoring: Keep secondary entry gates on standby.`
     ];
   }
 
   return {
     environment: env,
     location,
-    targetTimeFormatted: decimalToTimeString(decimalHour),
-    additionalVisitors: Number(additionalVisitors),
-    original: {
-      crowd: original.crowd,
-      occupancy: original.occupancyPct,
-      wait: original.waitMin,
-      status: original.status
-    },
-    scenario: {
-      crowd: scenario.crowd,
-      occupancy: scenario.occupancyPct,
-      wait: scenario.waitMin,
-      status: scenario.status
-    },
+    baseHour: baseDecimalHour,
+    baseHourFormatted: decimalToTimeString(baseDecimalHour),
+    addedSurgeCount: Number(addedSurgeCount),
+    original: originalStats,
+    scenario: scenarioStats,
     mitigated: {
       crowd: mitigatedCrowd,
       occupancy: mitigatedOccupancy,
       wait: mitigatedWait,
       status: mitigatedStatus,
-      timeSavedPct: scenario.waitMin > 0 ? Math.round(((scenario.waitMin - mitigatedWait) / scenario.waitMin) * 100) : 0
+      timeSavedPct: scenarioStats.waitMin > 0 ? Math.round(((scenarioStats.waitMin - mitigatedWait) / scenarioStats.waitMin) * 100) : 0
     },
+    deltaCrowd,
     deltaOccupancy,
     deltaWait,
     isOverload,
     isCritical,
-    bestAlternative,
+    bestAlternative: bestAlt,
     divertCount,
     physicalDirectives,
-    recommendation: isCritical
-      ? `🚨 CRITICAL BOTTLENECK: Influx of +${additionalVisitors} exceeds safe physical limits (${scenario.occupancyPct}% occupancy). Immediate active redirection of ${divertCount} people to ${bestAlternative.name} is required to prevent gridlock.`
-      : isOverload
-      ? `⚠️ ELEVATED CONGESTION: Occupancy surges to ${scenario.occupancyPct}% (+${deltaOccupancy}%). FlowSafe recommends opening secondary access points and routing ~${divertCount} people to ${bestAlternative.name}.`
-      : `✓ STABLE CAPACITY: ${location.name} has sufficient buffer to absorb +${additionalVisitors} extra people safely without creating queue bottlenecks.`
+    recommendation: isOverload
+      ? `🚨 SURGE HAZARD: +${addedSurgeCount} visitors pushes ${location.name} to ${scenarioStats.occupancyPct}% capacity (${scenarioStats.waitMin} min wait). Active FlowSafe balancing offloads ${divertCount} people to ${bestAlt ? bestAlt.name : 'other zones'} to restore safe 62% density.`
+      : `🟢 RESILIENT: Added surge of +${addedSurgeCount} is safely accommodated at ${scenarioStats.occupancyPct}% occupancy with ${scenarioStats.waitMin} min queue.`
   };
 }

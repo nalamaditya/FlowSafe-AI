@@ -20,14 +20,14 @@ export const ENVIRONMENTS = [
         capacity: 250,
         baselineWaitMin: 18,
         description: 'Main student food court and lunch counter.',
-        // Hourly crowd curve (8:00 AM to 8:00 PM)
+        // Hourly crowd curve (7:30 AM to 6:00 PM)
         hourly: {
-          '08:00': 20, '08:30': 35, '09:00': 45, '09:30': 50,
+          '07:30': 5, '08:00': 15, '08:30': 35, '08:45': 55, '09:00': 45, '09:30': 50,
           '10:00': 45, '10:30': 52, '11:00': 70, '11:30': 95,
           '12:00': 130, '12:30': 180, '13:00': 218, '13:30': 190,
           '14:00': 120, '14:30': 80, '15:00': 60, '15:30': 65,
-          '16:00': 55, '16:30': 40, '17:00': 30, '17:30': 20,
-          '18:00': 15, '19:00': 10, '20:00': 5
+          '16:00': 45, '16:30': 30, '17:00': 18, '17:30': 10,
+          '18:00': 5
         },
         reasonsHigh: [
           'Historical lunch hour rush between 12:30 PM – 2:00 PM',
@@ -51,12 +51,12 @@ export const ENVIRONMENTS = [
         baselineWaitMin: 2,
         description: 'Quiet study halls, reading zones, and digital archives.',
         hourly: {
-          '08:00': 15, '08:30': 25, '09:00': 40, '09:30': 60,
+          '07:30': 5, '08:00': 10, '08:30': 20, '09:00': 35, '09:30': 60,
           '10:00': 90, '10:30': 110, '11:00': 130, '11:30': 120,
           '12:00': 75, '12:30': 50, '13:00': 72, '13:30': 85,
           '14:00': 140, '14:30': 165, '15:00': 175, '15:30': 150,
-          '16:00': 110, '16:30': 70, '17:00': 40, '17:30': 25,
-          '18:00': 20, '19:00': 15, '20:00': 10
+          '16:00': 95, '16:30': 55, '17:00': 35, '17:30': 18,
+          '18:00': 5
         },
         reasonsHigh: [
           'Peak self-study window between class lecture intervals',
@@ -67,7 +67,7 @@ export const ENVIRONMENTS = [
           'Students attending scheduled morning/afternoon lectures',
           'Lunch break dispersal to campus dining areas'
         ],
-        recommendationHigh: '📚 Library seating filling up for afternoon study. Best time: Visit between 12:00 PM – 1:30 PM or after 5:00 PM.',
+        recommendationHigh: '📚 Library seating filling up for afternoon study. Best time: Visit between 12:00 PM – 1:30 PM or after 4:30 PM.',
         alternativeSuggestion: '💡 Alternative: Use Digital Reading Wing B or Open Quad benches.'
       },
       {
@@ -78,12 +78,12 @@ export const ENVIRONMENTS = [
         baselineWaitMin: 5,
         description: 'Central lecture halls, faculty corridors, and administrative offices.',
         hourly: {
-          '08:00': 30, '08:30': 110, '09:00': 240, '09:30': 160,
+          '07:30': 8, '08:00': 20, '08:30': 90, '08:45': 180, '09:00': 260, '09:30': 160,
           '10:00': 120, '10:30': 130, '11:00': 210, '11:30': 150,
           '12:00': 130, '12:30': 180, '13:00': 145, '13:30': 160,
           '14:00': 220, '14:30': 140, '15:00': 130, '15:30': 190,
-          '16:00': 150, '16:30': 90, '17:00': 40, '17:30': 20,
-          '18:00': 10, '19:00': 5, '20:00': 5
+          '16:00': 130, '16:30': 50, '17:00': 25, '17:30': 10,
+          '18:00': 5
         },
         reasonsHigh: [
           'Class transition bell intervals creating corridor crossover traffic',
@@ -105,15 +105,15 @@ export const ENVIRONMENTS = [
         baselineWaitMin: 15,
         description: 'College shuttle departures, city bus bays, and pickup points.',
         hourly: {
-          '08:00': 150, '08:30': 180, '09:00': 70, '09:30': 30,
-          '10:00': 20, '10:30': 15, '11:00': 15, '11:30': 20,
+          '07:30': 20, '08:00': 140, '08:30': 220, '08:45': 290, '09:00': 80, '09:30': 25,
+          '10:00': 15, '10:30': 15, '11:00': 15, '11:30': 20,
           '12:00': 25, '12:30': 35, '13:00': 62, '13:30': 40,
-          '14:00': 30, '14:30': 35, '15:00': 45, '15:30': 60,
-          '16:00': 120, '16:30': 220, '17:00': 295, '17:30': 210,
-          '18:00': 80, '19:00': 25, '20:00': 10
+          '14:00': 30, '14:30': 35, '15:00': 45, '15:30': 70,
+          '16:00': 160, '16:30': 280, '17:00': 260, '17:30': 120,
+          '18:00': 20
         },
         reasonsHigh: [
-          'College closing dismissal surge between 4:30 PM – 5:30 PM',
+          'College closing dismissal surge between 4:00 PM – 5:00 PM',
           'Simultaneous boarding for 12 suburban route buses',
           'Day scholar commuter concentration at main exit gate'
         ],
@@ -121,7 +121,7 @@ export const ENVIRONMENTS = [
           'Midday operating lull while academic sessions are active',
           'Buses stationed in depot awaiting evening shift'
         ],
-        recommendationHigh: '🚌 Bus area peaks heavily at 4:30 PM–5:15 PM. Best time: Board early before 4:15 PM or take 5:45 PM batch.',
+        recommendationHigh: '🚌 Bus area peaks heavily at 4:15 PM–5:00 PM. Best time: Board early at 4:00 PM or take 5:30 PM batch.',
         alternativeSuggestion: '💡 Alternative: Wait in Library study lounge until primary boarding wave clears.'
       },
       {
@@ -132,12 +132,12 @@ export const ENVIRONMENTS = [
         baselineWaitMin: 12,
         description: 'University keynote hall, conventions, and cultural events.',
         hourly: {
-          '08:00': 10, '08:30': 15, '09:00': 30, '09:30': 80,
+          '07:30': 5, '08:00': 10, '08:30': 15, '09:00': 30, '09:30': 80,
           '10:00': 380, '10:30': 440, '11:00': 420, '11:30': 390,
           '12:00': 120, '12:30': 40, '13:00': 50, '13:30': 70,
           '14:00': 320, '14:30': 410, '15:00': 390, '15:30': 280,
-          '16:00': 90, '16:30': 40, '17:00': 20, '17:30': 15,
-          '18:00': 10, '19:00': 10, '20:00': 5
+          '16:00': 70, '16:30': 30, '17:00': 15, '17:30': 10,
+          '18:00': 5
         },
         reasonsHigh: [
           'Scheduled Hackathon / Ideathon symposium keynote',
@@ -159,12 +159,12 @@ export const ENVIRONMENTS = [
         baselineWaitMin: 4,
         description: 'Athletic tracks, cricket ground, and basketball courts.',
         hourly: {
-          '08:00': 40, '08:30': 30, '09:00': 15, '09:30': 10,
+          '07:30': 25, '08:00': 30, '08:30': 20, '09:00': 10, '09:30': 10,
           '10:00': 10, '10:30': 15, '11:00': 20, '11:30': 25,
           '12:00': 30, '12:30': 40, '13:00': 35, '13:30': 30,
           '14:00': 25, '14:30': 30, '15:00': 40, '15:30': 75,
-          '16:00': 160, '16:30': 230, '17:00': 265, '17:30': 210,
-          '18:00': 130, '19:00': 40, '20:00': 15
+          '16:00': 140, '16:30': 180, '17:00': 140, '17:30': 60,
+          '18:00': 10
         },
         reasonsHigh: [
           'After-class sports club practices and intramural tournament',
@@ -175,7 +175,7 @@ export const ENVIRONMENTS = [
           'Daytime class hours with high sun exposure',
           'Grounds reserved for groundskeeping'
         ],
-        recommendationHigh: '🏃 Peak sports court utilization from 4:30 PM – 6:00 PM.',
+        recommendationHigh: '🏃 Peak sports court utilization from 4:15 PM – 5:30 PM.',
         alternativeSuggestion: '💡 Alternative: Indoor badminton courts have open slots.'
       },
       {
@@ -186,15 +186,15 @@ export const ENVIRONMENTS = [
         baselineWaitMin: 6,
         description: 'Specialized computing, AI workstation, and electronics labs.',
         hourly: {
-          '08:00': 10, '08:30': 30, '09:00': 90, '09:30': 130,
+          '07:30': 5, '08:00': 10, '08:30': 25, '09:00': 95, '09:30': 130,
           '10:00': 155, '10:30': 160, '11:00': 150, '11:30': 140,
           '12:00': 90, '12:30': 30, '13:00': 45, '13:30': 110,
           '14:00': 150, '14:30': 165, '15:00': 160, '15:30': 130,
-          '16:00': 80, '16:30': 40, '17:00': 20, '17:30': 15,
-          '18:00': 10, '19:00': 5, '20:00': 5
+          '16:00': 60, '16:30': 35, '17:00': 20, '17:30': 10,
+          '18:00': 5
         },
         reasonsHigh: [
-          'Scheduled 3-hour practical lab slots (9 AM–12 PM & 1:30 PM–4:30 PM)',
+          'Scheduled 3-hour practical lab slots (9 AM–12 PM & 1:30 PM–4:00 PM)',
           'High demand for specialized GPU machine clusters',
           'Faculty lab evaluations in progress'
         ],
@@ -213,23 +213,23 @@ export const ENVIRONMENTS = [
         baselineWaitMin: 8,
         description: 'Perimeter turnstiles, security ID verification, and vehicle boom barrier.',
         hourly: {
-          '08:00': 180, '08:30': 310, '09:00': 375, '09:30': 220,
-          '10:00': 60, '10:30': 45, '11:00': 40, '11:30': 50,
-          '12:00': 70, '12:30': 110, '13:00': 95, '13:30': 85,
-          '14:00': 60, '14:30': 50, '15:00': 70, '15:30': 110,
-          '16:00': 210, '16:30': 340, '17:00': 380, '17:30': 260,
-          '18:00': 110, '19:00': 40, '20:00': 20
+          '07:30': 30, '08:00': 90, '08:30': 220, '08:45': 360, '09:00': 390, '09:30': 140,
+          '10:00': 50, '10:30': 40, '11:00': 35, '11:30': 45,
+          '12:00': 60, '12:30': 100, '13:00': 85, '13:30': 75,
+          '14:00': 50, '14:30': 45, '15:00': 60, '15:30': 90,
+          '16:00': 260, '16:30': 380, '17:00': 220, '17:30': 80,
+          '18:00': 15
         },
         reasonsHigh: [
-          'Morning entry gate rush (8:30 AM – 9:15 AM) with ID card scanning',
-          'Evening exit dispersal surge (4:30 PM – 5:30 PM)',
+          'Morning entry gate rush (8:30 AM – 9:15 AM) with ID card scanning for 9 AM start',
+          'Evening exit dismissal surge (4:00 PM – 5:15 PM)',
           'Vehicle and pedestrian crossover friction'
         ],
         reasonsLow: [
           'Midday period with steady low pedestrian throughput',
           'Security processing operating with zero wait'
         ],
-        recommendationHigh: '🚪 Main Gate turnstiles experience morning rush at 8:45 AM. Arrive by 8:30 AM to skip lines.',
+        recommendationHigh: '🚪 Main Gate turnstiles experience heavy morning arrival wave at 8:45 AM for 9:00 AM classes.',
         alternativeSuggestion: '💡 Alternative: Pedestrian North Turnstile Gate is clear.'
       }
     ]
